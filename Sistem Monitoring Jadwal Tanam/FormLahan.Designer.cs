@@ -134,6 +134,7 @@
             // 
             this.txtLahanID.Location = new System.Drawing.Point(607, 95);
             this.txtLahanID.Name = "txtLahanID";
+            this.txtLahanID.ReadOnly = true;
             this.txtLahanID.Size = new System.Drawing.Size(100, 22);
             this.txtLahanID.TabIndex = 9;
             // 

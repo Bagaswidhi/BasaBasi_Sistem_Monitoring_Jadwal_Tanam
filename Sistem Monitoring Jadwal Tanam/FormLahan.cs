@@ -190,7 +190,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 
                 string query = "SELECT * FROM DataLahan WHERE NamaLahan LIKE @SearchText";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@SearchText", "%" + txt_Search.Text + "%");
+                cmd.Parameters.AddWithValue("@SearchText", "%" + textBox1.Text + "%");
 
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
