@@ -32,6 +32,7 @@
             this.btn_DataLahan = new System.Windows.Forms.Button();
             this.btn_DataTanaman = new System.Windows.Forms.Button();
             this.btn_report = new System.Windows.Forms.Button();
+            this.btnConnect = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btn_JadwalTanam
@@ -74,11 +75,22 @@
             this.btn_report.UseVisualStyleBackColor = true;
             this.btn_report.Click += new System.EventHandler(this.btn_report_Click);
             // 
+            // btnConnect
+            // 
+            this.btnConnect.Location = new System.Drawing.Point(330, 199);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(127, 40);
+            this.btnConnect.TabIndex = 4;
+            this.btnConnect.Text = "Koneksi Database";
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.btn_report);
             this.Controls.Add(this.btn_DataTanaman);
             this.Controls.Add(this.btn_DataLahan);
@@ -96,6 +108,7 @@
         private System.Windows.Forms.Button btn_DataLahan;
         private System.Windows.Forms.Button btn_DataTanaman;
         private System.Windows.Forms.Button btn_report;
+        private System.Windows.Forms.Button btnConnect;
     }
 }
 

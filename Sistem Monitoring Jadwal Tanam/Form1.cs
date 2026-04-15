@@ -22,6 +22,23 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             conn = new SqlConnection(connectionString);
         }
 
+        private void ConnectDatabase()
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+
+                MessageBox.Show("Yeay, Koneksi Ke Database Berhasil!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
         private void btn_DataTanaman_Click(object sender, EventArgs e)
         {
             FormTanaman formTanaman = new FormTanaman();
@@ -55,6 +72,11 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             FormReport formReport = new FormReport();
             formReport.Show();
             this.Hide();
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            ConnectDatabase();
         }
     }
 }
