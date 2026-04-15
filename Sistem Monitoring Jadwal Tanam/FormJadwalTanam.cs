@@ -68,5 +68,57 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 }
             }
         }
+
+        private void btn_Insert_Click(object sender, EventArgs e)
+        {
+            if (txtIdLahan.Text == "" || txtIdTanaman.Text == "")
+            {
+                MessageBox.Show("ID Tanaman atau ID Lahan harus diisi.");
+                return;
+            }
+            try
+            {
+                // Mengecek Data Tanaman pada tabel DataTanaman
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+                string queryCheck = "SELECT LamaMasaTanam FROM DataTanaman WHERE TanamanID = @TanamanID";
+                SqlCommand cmdCheck = new SqlCommand(queryCheck, conn);
+                cmdCheck.Parameters.AddWithValue("@TanamanID", txtIdTanaman.Text);
+
+                object result = cmdCheck.ExecuteScalar();
+
+                if (result == null)
+                {
+                    MessageBox.Show("Tanaman dengan ID tersebut tidak ditemukan.");
+                    return;
+                }
+
+                // Jika tanaman ditemukan, lanjutkan dengan kalkulasi estimasi panen
+                DateTime tanggalTanam = dtpTanggalTanam.Value.Date;
+
+                // Hitung Estimasi
+                int masaTanamHari = Convert.ToInt32(result);
+                DateTime estimasiPanen = tanggalTanam.AddDays(masaTanamHari);
+                txtEstimasiPanen.Text = estimasiPanen.ToString("yyyy-MM-dd");
+
+
+                string querySimpan = @"INSERT INTO JadwalTanam (TanamanID, LahanID, TanggalTanam, EstimasiPanen) 
+                                       VALUES (@TanamanID, @LahanID, @TanggalTanam, @EstimasiPanen)";
+                SqlCommand cmdSimpan = new SqlCommand(querySimpan, conn);
+                cmdSimpan.Parameters.AddWithValue("@TanamanID", txtIdTanaman.Text);
+                cmdSimpan.Parameters.AddWithValue("@LahanID", txtIdLahan.Text);
+                cmdSimpan.Parameters.AddWithValue("@TanggalTanam", tanggalTanam);
+                cmdSimpan.Parameters.AddWithValue("@EstimasiPanen", estimasiPanen);
+                cmdSimpan.ExecuteNonQuery();
+
+                MessageBox.Show("Jadwal tanam berhasil disimpan.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
     }
 }
