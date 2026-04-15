@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Sistem_Monitoring_Jadwal_Tanam
 {
-    public partial class FormLahan: Form
+    public partial class FormLahan : Form
     {
         private readonly SqlConnection conn;
         private readonly string connectionString = "Data Source=MSI\\BAGASWIDHI;Initial Catalog=DBSistemMonitoringMasaTanam;Integrated Security=True";
@@ -20,5 +20,4 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             InitializeComponent();
             conn = new SqlConnection(connectionString);
         }
-    }
-}
+

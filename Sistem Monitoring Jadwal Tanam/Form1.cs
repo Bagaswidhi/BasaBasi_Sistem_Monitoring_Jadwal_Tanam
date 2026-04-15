@@ -33,7 +33,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         private void btn_DataLahan_Click(object sender, EventArgs e)

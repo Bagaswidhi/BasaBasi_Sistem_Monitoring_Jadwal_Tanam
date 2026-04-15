@@ -186,5 +186,24 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             txtNamaTanaman.Text = row.Cells["NamaTanaman"].Value.ToString();
             txtLamaMasaTanam.Text = row.Cells["LamaMasaTanam"].Value.ToString();
         }
+
+        private void FormTanaman_Load(object sender, EventArgs e)
+        {
+            dataGridView1.ReadOnly = true;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView1.CellClick += dataGridView1_CellContentClick;
+        }
+
+        private void btn_Back_Click(object sender, EventArgs e)
+        {
+            Form formHome = Application.OpenForms["Form1"];
+
+            if(formHome != null)
+            {
+                formHome.Show();
+            }
+            this.Close();
+        }
     }
 }
