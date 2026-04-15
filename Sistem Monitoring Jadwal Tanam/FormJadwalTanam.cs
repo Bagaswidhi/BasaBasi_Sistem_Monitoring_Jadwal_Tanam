@@ -120,5 +120,60 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
+        private void btn_Update_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+                string queryCheck = "SELECT LamaMasaTanam FROM DataTanaman WHERE TanamanID = @TanamanID";
+                SqlCommand cmdCheck = new SqlCommand(queryCheck, conn);
+                cmdCheck.Parameters.AddWithValue("@TanamanID", txtIdTanaman.Text);
+
+                object result = cmdCheck.ExecuteScalar();
+                if (result == null)
+                {
+                    MessageBox.Show("Tanaman dengan ID tersebut tidak ditemukan.");
+                    return;
+                }
+
+                DateTime tanggalTanam = dtpTanggalTanam.Value.Date;
+                int masaTanamHari = Convert.ToInt32(result);
+                DateTime estimasiPanen = tanggalTanam.AddDays(masaTanamHari);
+
+                txtEstimasiPanen.Text = estimasiPanen.ToString("yyyy-MM-dd");
+
+                string queryUpdate = @"UPDATE JadwalTanam SET TanamanID = @TanamanID, 
+                                                        LahanID = @LahanID, 
+                                                        TanggalTanam = @TanggalTanam, 
+                                                        EstimasiPanen = @EstimasiPanen
+                                                        WHERE JadwalID = @JadwalID";
+                SqlCommand cmdUpdate = new SqlCommand(queryUpdate, conn);
+                cmdUpdate.Parameters.AddWithValue("@TanamanID", txtIdTanaman.Text);
+                cmdUpdate.Parameters.AddWithValue("@LahanID", txtIdLahan.Text);
+                cmdUpdate.Parameters.AddWithValue("@TanggalTanam", tanggalTanam);
+                cmdUpdate.Parameters.AddWithValue("@EstimasiPanen", estimasiPanen);
+                cmdUpdate.Parameters.AddWithValue("@JadwalID", idJadwalTerpilih);
+                int resultUpdate = cmdUpdate.ExecuteNonQuery();
+                if (resultUpdate > 0)
+                {
+                    MessageBox.Show("Jadwal tanam berhasil diperbarui.");
+                    idJadwalTerpilih = "";
+                    btn_Load.PerformClick();
+                }
+                else
+                {
+                    MessageBox.Show("Jadwal tanam tidak ditemukan.");
+                }
+                BersihkanForm();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
     }
 }
