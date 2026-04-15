@@ -140,5 +140,42 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
+        private void btn_Delete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+                DialogResult resultConfirm = MessageBox.Show(
+                    "Yakin mau ngehapus data ini?",
+                    "Konfirmasi Hapus",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+                if (resultConfirm == DialogResult.Yes)
+                {
+                    string query = @"DELETE FROM DataLahan WHERE LahanID = @LahanID";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@LahanID", txtLahanID.Text);
+                    int result = cmd.ExecuteNonQuery();
+                    if (result > 0)
+                    {
+                        MessageBox.Show("Yeay, Data berhasil dihapus!");
+                        txtLahanID.Clear();
+                        btn_Load.PerformClick();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Yah, Datanya ga ketemu:(");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
     }
 }
