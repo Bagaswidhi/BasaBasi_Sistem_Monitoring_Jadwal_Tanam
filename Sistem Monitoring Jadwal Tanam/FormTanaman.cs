@@ -199,11 +199,42 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             Form formHome = Application.OpenForms["Form1"];
 
-            if(formHome != null)
+            if (formHome != null)
             {
                 formHome.Show();
             }
             this.Close();
+        }
+
+        private void txt_Search_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+                dataGridView1.Rows.Clear();
+
+                string query = "SELECT * FROM DataTanaman WHERE NamaTanaman LIKE @SearchText";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@SearchText", "%" + txt_Search.Text + "%");
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    dataGridView1.Rows.Add(
+                        reader["TanamanID"].ToString(),
+                        reader["NamaTanaman"].ToString(),
+                        reader["LamaMasaTanam"].ToString()
+                        );
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
     }
 }
