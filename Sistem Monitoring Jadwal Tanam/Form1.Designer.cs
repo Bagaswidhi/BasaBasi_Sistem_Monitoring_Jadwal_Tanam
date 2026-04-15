@@ -36,7 +36,7 @@
             // 
             // btn_JadwalTanam
             // 
-            this.btn_JadwalTanam.Location = new System.Drawing.Point(47, 366);
+            this.btn_JadwalTanam.Location = new System.Drawing.Point(47, 197);
             this.btn_JadwalTanam.Name = "btn_JadwalTanam";
             this.btn_JadwalTanam.Size = new System.Drawing.Size(126, 45);
             this.btn_JadwalTanam.TabIndex = 0;
@@ -46,7 +46,7 @@
             // 
             // btn_DataLahan
             // 
-            this.btn_DataLahan.Location = new System.Drawing.Point(417, 366);
+            this.btn_DataLahan.Location = new System.Drawing.Point(435, 340);
             this.btn_DataLahan.Name = "btn_DataLahan";
             this.btn_DataLahan.Size = new System.Drawing.Size(126, 45);
             this.btn_DataLahan.TabIndex = 1;
@@ -56,7 +56,7 @@
             // 
             // btn_DataTanaman
             // 
-            this.btn_DataTanaman.Location = new System.Drawing.Point(232, 366);
+            this.btn_DataTanaman.Location = new System.Drawing.Point(227, 340);
             this.btn_DataTanaman.Name = "btn_DataTanaman";
             this.btn_DataTanaman.Size = new System.Drawing.Size(126, 45);
             this.btn_DataTanaman.TabIndex = 2;
@@ -66,7 +66,7 @@
             // 
             // btn_report
             // 
-            this.btn_report.Location = new System.Drawing.Point(603, 366);
+            this.btn_report.Location = new System.Drawing.Point(603, 197);
             this.btn_report.Name = "btn_report";
             this.btn_report.Size = new System.Drawing.Size(126, 45);
             this.btn_report.TabIndex = 3;
