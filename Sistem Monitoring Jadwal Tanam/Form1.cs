@@ -33,13 +33,20 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void btn_DataLahan_Click(object sender, EventArgs e)
         {
             FormLahan formLahan = new FormLahan();
             formLahan.Show();
+            this.Hide();
+        }
+
+        private void btn_JadwalTanam_Click(object sender, EventArgs e)
+        {
+            FormJadwalTanam formJadwalTanam = new FormJadwalTanam();
+            formJadwalTanam.Show();
             this.Hide();
         }
     }

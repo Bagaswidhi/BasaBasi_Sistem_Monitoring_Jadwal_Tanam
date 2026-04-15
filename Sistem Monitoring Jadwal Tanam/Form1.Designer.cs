@@ -42,6 +42,7 @@
             this.btn_JadwalTanam.TabIndex = 0;
             this.btn_JadwalTanam.Text = "Jadwal Tanam";
             this.btn_JadwalTanam.UseVisualStyleBackColor = true;
+            this.btn_JadwalTanam.Click += new System.EventHandler(this.btn_JadwalTanam_Click);
             // 
             // btn_DataLahan
             // 

@@ -88,7 +88,7 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 41);
+            this.dataGridView1.Location = new System.Drawing.Point(15, 47);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
@@ -150,12 +150,12 @@
             // 
             // btn_Back
             // 
-            this.btn_Back.BackColor = System.Drawing.Color.Cornsilk;
-            this.btn_Back.Location = new System.Drawing.Point(713, 12);
+            this.btn_Back.BackColor = System.Drawing.Color.Coral;
+            this.btn_Back.Location = new System.Drawing.Point(704, 8);
             this.btn_Back.Name = "btn_Back";
-            this.btn_Back.Size = new System.Drawing.Size(75, 23);
+            this.btn_Back.Size = new System.Drawing.Size(85, 27);
             this.btn_Back.TabIndex = 13;
-            this.btn_Back.Text = "Kembali";
+            this.btn_Back.Text = "Back";
             this.btn_Back.UseVisualStyleBackColor = false;
             this.btn_Back.Click += new System.EventHandler(this.btn_Back_Click);
             // 
