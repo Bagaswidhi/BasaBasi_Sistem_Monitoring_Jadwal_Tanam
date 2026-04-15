@@ -175,5 +175,38 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
+        private void btn_Delete_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Apakah Anda yakin ingin menghapus jadwal tanam ini?", "Konfirmasi Hapus", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                try
+                {
+                    if (conn.State == System.Data.ConnectionState.Closed)
+                    {
+                        conn.Open();
+                    }
+                    string queryDelete = "DELETE FROM JadwalTanam WHERE JadwalID = @JadwalID";
+                    SqlCommand cmdDelete = new SqlCommand(queryDelete, conn);
+                    cmdDelete.Parameters.AddWithValue("@JadwalID", idJadwalTerpilih);
+                    int resultDelete = cmdDelete.ExecuteNonQuery();
+                    if (resultDelete > 0)
+                    {
+                        MessageBox.Show("Jadwal tanam berhasil dihapus.");
+                        idJadwalTerpilih = "";
+                        btn_Load.PerformClick();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Jadwal tanam tidak ditemukan.");
+                    }
+                    BersihkanForm();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
+        }
     }
 }
