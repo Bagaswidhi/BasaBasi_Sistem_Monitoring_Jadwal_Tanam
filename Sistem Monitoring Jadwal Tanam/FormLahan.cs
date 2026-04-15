@@ -66,5 +66,42 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
+        private void btn_Load_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+
+                dataGridView1.Rows.Clear();
+                dataGridView1.Columns.Clear();
+
+                dataGridView1.Columns.Add("LahanID", "Lahan ID");
+                dataGridView1.Columns.Add("NamaLahan", "Nama Tanaman");
+                dataGridView1.Columns.Add("luas_lahan", "Luas Lahan (m²)");
+
+                string query = "SELECT * FROM DataLahan";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataGridView1.Rows.Add(
+                        reader["LahanID"].ToString(),
+                        reader["NamaLahan"].ToString(),
+                        reader["luas_lahan"].ToString()
+                        );
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
     }
 }
