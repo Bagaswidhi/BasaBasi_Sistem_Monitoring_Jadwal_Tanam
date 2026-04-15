@@ -219,5 +219,21 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             }
             this.Close();
         }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+            txtLahanID.Text = row.Cells["LahanID"].Value.ToString();
+            txtNamaLahan.Text = row.Cells["NamaLahan"].Value.ToString();
+            txtLuasLahan.Text = row.Cells["luas_lahan"].Value.ToString();
+        }
+
+        private void FormLahan_Load(object sender, EventArgs e)
+        {
+            dataGridView1.ReadOnly = true;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView1.CellClick += dataGridView1_CellContentClick;
+        }
     }
 }
