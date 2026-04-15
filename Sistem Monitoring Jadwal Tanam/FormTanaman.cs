@@ -178,5 +178,13 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+            txtTanamanID.Text = row.Cells["TanamanID"].Value.ToString();
+            txtNamaTanaman.Text = row.Cells["NamaTanaman"].Value.ToString();
+            txtLamaMasaTanam.Text = row.Cells["LamaMasaTanam"].Value.ToString();
+        }
     }
 }
