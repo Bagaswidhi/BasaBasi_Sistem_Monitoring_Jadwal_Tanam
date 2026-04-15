@@ -259,5 +259,38 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             }
             this.Close();
         }
+
+        private void textSearch_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+                dataGridView1.Rows.Clear();
+
+                string query = "SELECT * FROM JadwalTanam WHERE JadwalID LIKE @SearchText";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@SearchText", "%" + txt_Search.Text + "%");
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    dataGridView1.Rows.Add(
+                        reader["JadwalID"].ToString(),
+                        reader["TanamanID"].ToString(),
+                        reader["LahanID"].ToString(),
+                        reader["TanggalTanam"].ToString(),
+                        reader["EstimasiPanen"].ToString()
+                        );
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
     }
 }
