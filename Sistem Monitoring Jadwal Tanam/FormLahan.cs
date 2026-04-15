@@ -103,5 +103,42 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
+        private void btn_Update_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+
+                string query = @"UPDATE DataLahan SET NamaLahan = @NamaLahan, 
+                                                        luas_lahan = @luas_lahan
+                                                        WHERE LahanID = @LahanID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@NamaLahan", txtNamaLahan.Text);
+                cmd.Parameters.AddWithValue("@luas_lahan", txtLuasLahan.Text);
+                cmd.Parameters.AddWithValue("@LahanID", txtLahanID.Text);
+                int result = cmd.ExecuteNonQuery();
+
+                if (result > 0)
+                {
+                    MessageBox.Show("Yeay, Data berhasil diperbarui!");
+                    txtNamaLahan.Clear();
+                    txtLuasLahan.Clear();
+                    txtLahanID.Clear();
+                    btn_Load.PerformClick();
+                }
+                else
+                {
+                    MessageBox.Show("Yah, Gagal memperbarui data:(");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
     }
 }
