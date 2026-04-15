@@ -208,5 +208,45 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 }
             }
         }
+
+        private void btn_Load_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+
+                dataGridView1.Rows.Clear();
+                dataGridView1.Columns.Clear();
+                dataGridView1.Columns.Add("JadwalID", "Jadwal ID");
+                dataGridView1.Columns.Add("TanamanID", "Tanaman ID");
+                dataGridView1.Columns.Add("LahanID", "Lahan ID");
+                dataGridView1.Columns.Add("TanggalTanam", "Tanggal Tanam");
+                dataGridView1.Columns.Add("EstimasiPanen", "Estimasi Panen");
+
+                string query = "SELECT * FROM JadwalTanam";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dataGridView1.Rows.Add(
+                        reader["JadwalID"].ToString(),
+                        reader["TanamanID"].ToString(),
+                        reader["LahanID"].ToString(),
+                        Convert.ToDateTime(reader["TanggalTanam"]).ToString("yyyy-MM-dd"),
+                        Convert.ToDateTime(reader["EstimasiPanen"]).ToString("yyyy-MM-dd")
+                        );
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
     }
 }
