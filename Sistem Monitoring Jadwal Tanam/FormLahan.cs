@@ -208,5 +208,16 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
+        private void btn_Back_Click(object sender, EventArgs e)
+        {
+            Form formHome = Application.OpenForms["Form1"];
+
+            if (formHome != null)
+            {
+                formHome.Show();
+            }
+            this.Close();
+        }
     }
 }
