@@ -141,5 +141,42 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
+        private void btn_Delete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+                DialogResult resultConfirm = MessageBox.Show(
+                    "Apakah Anda yakin ingin menghapus data ini?",
+                    "Konfirmasi Hapus",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+                if (resultConfirm == DialogResult.Yes)
+                {
+                    string query = @"DELETE FROM DataTanaman WHERE TanamanID = @TanamanID";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@TanamanID", txtTanamanID.Text);
+                    int result = cmd.ExecuteNonQuery();
+                    if (result > 0)
+                    {
+                        MessageBox.Show("Data berhasil dihapus.");
+                        txtTanamanID.Clear();
+                        btn_Load.PerformClick();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Data tidak ditemukan");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
     }
 }
