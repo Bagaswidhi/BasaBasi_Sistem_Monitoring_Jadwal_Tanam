@@ -104,5 +104,42 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
+        private void btn_Update_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+
+                string query = @"UPDATE DataTanaman SET NamaTanaman = @NamaTanaman, 
+                                                        LamaMasaTanam = @LamaMasaTanam 
+                                                        WHERE TanamanID = @TanamanID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@NamaTanaman", txtNamaTanaman.Text);
+                cmd.Parameters.AddWithValue("@LamaMasaTanam", txtLamaMasaTanam.Text);
+                cmd.Parameters.AddWithValue("@TanamanID", txtTanamanID.Text);
+                int result = cmd.ExecuteNonQuery();
+
+                if (result > 0)
+                {
+                    MessageBox.Show("Data berhasil diperbarui.");
+                    txtNamaTanaman.Clear();
+                    txtLamaMasaTanam.Clear();
+                    txtTanamanID.Clear();
+                    btn_Load.PerformClick();
+                }
+                else
+                {
+                    MessageBox.Show("Gagal memperbarui data.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
     }
 }
