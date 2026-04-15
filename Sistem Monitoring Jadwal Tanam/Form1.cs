@@ -49,5 +49,12 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             formJadwalTanam.Show();
             this.Hide();
         }
+
+        private void btn_report_Click(object sender, EventArgs e)
+        {
+            FormReport formReport = new FormReport();
+            formReport.Show();
+            this.Hide();
+        }
     }
 }

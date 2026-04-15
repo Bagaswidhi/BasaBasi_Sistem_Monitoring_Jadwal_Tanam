@@ -72,6 +72,7 @@
             this.btn_report.TabIndex = 3;
             this.btn_report.Text = "Report";
             this.btn_report.UseVisualStyleBackColor = true;
+            this.btn_report.Click += new System.EventHandler(this.btn_report_Click);
             // 
             // Form1
             // 
