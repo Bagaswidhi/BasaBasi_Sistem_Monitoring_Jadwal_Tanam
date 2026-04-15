@@ -57,5 +57,52 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
+        private void btn_Insert_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+
+                if (txtNamaTanaman.Text == "")
+                {
+                    MessageBox.Show("Nama Tanaman tidak boleh kosong.");
+                    txtNamaTanaman.Focus();
+                    return;
+                }
+
+                if (txtLamaMasaTanam.Text == "")
+                {
+                    MessageBox.Show("Lama Masa Tanam tidak boleh kosong.");
+                    txtLamaMasaTanam.Focus();
+                    return;
+                }
+                string query = @"INSERT INTO DataTanaman (NamaTanaman, LamaMasaTanam) VALUES (@NamaTanaman, @LamaMasaTanam)";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@NamaTanaman", txtNamaTanaman.Text);
+                cmd.Parameters.AddWithValue("@LamaMasaTanam", txtLamaMasaTanam.Text);
+                int result = cmd.ExecuteNonQuery();
+
+                if (result > 0)
+                {
+                    MessageBox.Show("Data berhasil ditambahkan.");
+                    txtNamaTanaman.Clear();
+                    txtLamaMasaTanam.Clear();
+                    btn_Load.PerformClick();
+                }
+                else
+                {
+                    MessageBox.Show("Gagal menambahkan data.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
     }
 }
