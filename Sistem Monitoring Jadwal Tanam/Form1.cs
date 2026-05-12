@@ -15,7 +15,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
     public partial class Form1: Form
     {
         private readonly SqlConnection conn;
-        private readonly string connectionString = "Data Source=MSI\\BAGASWIDHI;Initial Catalog=DBSistemMonitoringMasaTanam;Integrated Security=True";
+        private readonly string connectionString = "Data Source=MSI\\BAGAS;Initial Catalog=DBSistemMonitoringMasaTanam;Integrated Security=True";
         public Form1()
         {
             InitializeComponent();
