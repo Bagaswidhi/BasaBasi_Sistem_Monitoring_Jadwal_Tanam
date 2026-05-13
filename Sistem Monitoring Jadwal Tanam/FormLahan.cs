@@ -99,26 +99,21 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     conn.Open();
                 }
 
-                string query = @"UPDATE DataLahan SET NamaLahan = @NamaLahan, 
-                                                        luas_lahan = @luas_lahan
-                                                        WHERE LahanID = @LahanID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@NamaLahan", txtNamaLahan.Text);
-                cmd.Parameters.AddWithValue("@luas_lahan", txtLuasLahan.Text);
-                cmd.Parameters.AddWithValue("@LahanID", txtLahanID.Text);
-                int result = cmd.ExecuteNonQuery();
+                using (SqlCommand cmd = new SqlCommand("sp_UpdateLahan", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                if (result > 0)
-                {
-                    MessageBox.Show("Yeay, Data berhasil diperbarui!");
-                    txtNamaLahan.Clear();
-                    txtLuasLahan.Clear();
-                    txtLahanID.Clear();
-                    btn_Load.PerformClick();
-                }
-                else
-                {
-                    MessageBox.Show("Yah, Gagal memperbarui data:(");
+                    cmd.Parameters.AddWithValue("@LahanID", Convert.ToInt32(txtLahanID.Text));
+                    cmd.Parameters.AddWithValue("@NamaLahan", txtNamaLahan.Text);
+                    cmd.Parameters.AddWithValue("@luas_lahan", txtLuasLahan.Text);
+
+                    int result = cmd.ExecuteNonQuery();
+
+                    if (result < 0)
+                    {
+                        MessageBox.Show("Data tanaman berhasil diubah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        btn_Load.PerformClick();
+                    }
                 }
             }
             catch (Exception ex)
