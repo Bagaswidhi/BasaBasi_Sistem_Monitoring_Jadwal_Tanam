@@ -210,5 +210,57 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.CellClick += dataGridView1_CellContentClick;
         }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Closed) 
+                    conn.Open();
+
+                using (SqlCommand cmd = new SqlCommand("sp_ResetInjection", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.ExecuteNonQuery();
+
+                    MessageBox.Show("Data berhasil di reset bos!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    btn_Load.PerformClick();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Reset gagal: " + ex.Message);
+            }
+        }
+
+        private void btnInjection_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+
+                using (SqlCommand cmd = new SqlCommand("sp_Injection", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@LuasLahan", txtLuasLahan.Text);
+                    cmd.Parameters.AddWithValue("@LahanID", txtLahanID.Text);
+
+                    int result = cmd.ExecuteNonQuery();
+                    btn_Load.PerformClick();
+                    if (result < 0)
+                    {
+                        MessageBox.Show("baris terupdate", "Hasil Eksekusi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }
