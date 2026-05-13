@@ -47,6 +47,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DB_SMJT_DataLahanSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DB_SMJT_DataLahanSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DB_SMJT_DataTanamanSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DB_SMJT_DataTanamanSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DB_SMJT_JadwalTanamSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DB_SMJT_JadwalTanamSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,6 +118,39 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="DB_SMJT_DataLahanSet.xsc">
+      <DependentUpon>DB_SMJT_DataLahanSet.xsd</DependentUpon>
+    </None>
+    <None Include="DB_SMJT_DataLahanSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DB_SMJT_DataLahanSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DB_SMJT_DataLahanSet.xss">
+      <DependentUpon>DB_SMJT_DataLahanSet.xsd</DependentUpon>
+    </None>
+    <None Include="DB_SMJT_DataTanamanSet.xsc">
+      <DependentUpon>DB_SMJT_DataTanamanSet.xsd</DependentUpon>
+    </None>
+    <None Include="DB_SMJT_DataTanamanSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DB_SMJT_DataTanamanSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DB_SMJT_DataTanamanSet.xss">
+      <DependentUpon>DB_SMJT_DataTanamanSet.xsd</DependentUpon>
+    </None>
+    <None Include="DB_SMJT_JadwalTanamSet.xsc">
+      <DependentUpon>DB_SMJT_JadwalTanamSet.xsd</DependentUpon>
+    </None>
+    <None Include="DB_SMJT_JadwalTanamSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DB_SMJT_JadwalTanamSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DB_SMJT_JadwalTanamSet.xss">
+      <DependentUpon>DB_SMJT_JadwalTanamSet.xsd</DependentUpon>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -77,9 +77,9 @@
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(330, 199);
+            this.btnConnect.Location = new System.Drawing.Point(323, 202);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(127, 40);
+            this.btnConnect.Size = new System.Drawing.Size(150, 40);
             this.btnConnect.TabIndex = 4;
             this.btnConnect.Text = "Koneksi Database";
             this.btnConnect.UseVisualStyleBackColor = true;
