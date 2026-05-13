@@ -245,19 +245,27 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     {
                         conn.Open();
                     }
-                    string queryDelete = "DELETE FROM JadwalTanam WHERE JadwalID = @JadwalID";
-                    SqlCommand cmdDelete = new SqlCommand(queryDelete, conn);
-                    cmdDelete.Parameters.AddWithValue("@JadwalID", idJadwalTerpilih);
-                    int resultDelete = cmdDelete.ExecuteNonQuery();
-                    if (resultDelete > 0)
+                    using (SqlCommand cmdDelete = new SqlCommand("sp_DeleteJadwal", conn))
                     {
-                        MessageBox.Show("Jadwal tanam berhasil dihapus.");
-                        idJadwalTerpilih = "";
-                        btn_Load.PerformClick();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Jadwal tanam tidak ditemukan.");
+                        cmdDelete.CommandType = CommandType.StoredProcedure;
+
+                        // Masukkan parameter ID jadwal yang akan dihapus
+                        cmdDelete.Parameters.AddWithValue("@JadwalID", Convert.ToInt32(idJadwalTerpilih));
+
+                        int result = cmdDelete.ExecuteNonQuery();
+
+                        if (result < 0)
+                        {
+                            MessageBox.Show("Jadwal tanam berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            idJadwalTerpilih = "";
+                            cmbTanaman.SelectedIndex = -1;
+                            cmbLahan.SelectedIndex = -1;
+                            txtEstimasiPanen.Clear();
+                            dtpTanggalTanam.Value = DateTime.Today;
+
+                            btn_Load.PerformClick();
+                        }
                     }
                 }
                 catch (Exception ex)
