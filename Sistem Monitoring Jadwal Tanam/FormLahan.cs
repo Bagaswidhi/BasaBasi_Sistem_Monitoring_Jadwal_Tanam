@@ -76,27 +76,19 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     conn.Open();
                 }
 
-                dataGridView1.Rows.Clear();
-                dataGridView1.Columns.Clear();
-
-                dataGridView1.Columns.Add("LahanID", "Lahan ID");
-                dataGridView1.Columns.Add("NamaLahan", "Nama Tanaman");
-                dataGridView1.Columns.Add("luas_lahan", "Luas Lahan (m²)");
-
-                string query = "SELECT * FROM DataLahan";
-
+                string query = "SELECT * FROM v_GetLahan";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
 
-                while (reader.Read())
-                {
-                    dataGridView1.Rows.Add(
-                        reader["LahanID"].ToString(),
-                        reader["NamaLahan"].ToString(),
-                        reader["luas_lahan"].ToString()
-                        );
-                }
-                reader.Close();
+                // Menggunakan SqlDataAdapter untuk menarik data sekaligus
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+
+                // Masukkan semua data dari database ke dalam DataTable
+                adapter.Fill(dt);
+
+                // Berikan data tersebut ke BindingSource.
+                // DataGridView otomatis akan terisi dan ter-refresh!
+                dataLahanBindingSource.DataSource = dt;
             }
             catch (Exception ex)
             {
@@ -230,6 +222,8 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 
         private void FormLahan_Load(object sender, EventArgs e)
         {
+            // TODO: This line of code loads data into the 'dB_SMJT_DataLahanSet.DataLahan' table. You can move, or remove it, as needed.
+            this.dataLahanTableAdapter.Fill(this.dB_SMJT_DataLahanSet.DataLahan);
             dataGridView1.ReadOnly = true;
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
