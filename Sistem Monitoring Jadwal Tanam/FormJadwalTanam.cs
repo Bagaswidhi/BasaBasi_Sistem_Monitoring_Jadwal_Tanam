@@ -162,6 +162,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                         cmbTanaman.SelectedIndex = -1;
                         cmbLahan.SelectedIndex = -1;
                         txtEstimasiPanen.Clear();
+                        dtpTanggalTanam.Value = DateTime.Today;
                     }
                 }
             }
@@ -179,11 +180,15 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 {
                     conn.Open();
                 }
-                string queryCheck = "SELECT LamaMasaTanam FROM DataTanaman WHERE TanamanID = @TanamanID";
-                SqlCommand cmdCheck = new SqlCommand(queryCheck, conn);
-                cmdCheck.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
+                object result = null;
 
-                object result = cmdCheck.ExecuteScalar();
+                using (SqlCommand cmdCheck = new SqlCommand("sp_Get_LamaMasaTanam", conn))
+                {
+                    cmdCheck.CommandType = CommandType.StoredProcedure;
+                    cmdCheck.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
+                    result = cmdCheck.ExecuteScalar();
+                }
+
                 if (result == null)
                 {
                     MessageBox.Show("Tanaman dengan ID tersebut tidak ditemukan.");
@@ -196,27 +201,32 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 
                 txtEstimasiPanen.Text = estimasiPanen.ToString("yyyy-MM-dd");
 
-                string queryUpdate = @"UPDATE JadwalTanam SET TanamanID = @TanamanID, 
-                                                        LahanID = @LahanID, 
-                                                        TanggalTanam = @TanggalTanam, 
-                                                        EstimasiPanen = @EstimasiPanen
-                                                        WHERE JadwalID = @JadwalID";
-                SqlCommand cmdUpdate = new SqlCommand(queryUpdate, conn);
-                cmdUpdate.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
-                cmdUpdate.Parameters.AddWithValue("@LahanID",  cmbLahan.SelectedValue);
-                cmdUpdate.Parameters.AddWithValue("@TanggalTanam", tanggalTanam);
-                cmdUpdate.Parameters.AddWithValue("@EstimasiPanen", estimasiPanen);
-                cmdUpdate.Parameters.AddWithValue("@JadwalID", idJadwalTerpilih);
-                int resultUpdate = cmdUpdate.ExecuteNonQuery();
-                if (resultUpdate > 0)
+                using (SqlCommand cmdUpdate = new SqlCommand("sp_UpdateJadwal", conn))
                 {
-                    MessageBox.Show("Jadwal tanam berhasil diperbarui.");
-                    idJadwalTerpilih = "";
-                    btn_Load.PerformClick();
-                }
-                else
-                {
-                    MessageBox.Show("Jadwal tanam tidak ditemukan.");
+                    cmdUpdate.CommandType = CommandType.StoredProcedure;
+
+                    cmdUpdate.Parameters.AddWithValue("@JadwalID", Convert.ToInt32(idJadwalTerpilih));
+                    cmdUpdate.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
+                    cmdUpdate.Parameters.AddWithValue("@LahanID", cmbLahan.SelectedValue);
+                    cmdUpdate.Parameters.AddWithValue("@TanggalTanam", tanggalTanam);
+                    cmdUpdate.Parameters.AddWithValue("@EstimasiPanen", estimasiPanen);
+
+                    int resultUpdate = cmdUpdate.ExecuteNonQuery();
+
+                    if (resultUpdate < 0)
+                    {
+                        MessageBox.Show("Jadwal tanam berhasil diperbarui!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // Bersihkan variabel dan layar setelah sukses
+                        idJadwalTerpilih = "";
+                        cmbTanaman.SelectedIndex = -1;
+                        cmbLahan.SelectedIndex = -1;
+                        txtEstimasiPanen.Clear();
+                        dtpTanggalTanam.Value = DateTime.Today;
+
+                        // Refresh tabel
+                        btn_Load.PerformClick();
+                    }
                 }
             }
             catch (Exception ex)

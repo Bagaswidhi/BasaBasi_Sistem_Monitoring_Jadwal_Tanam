@@ -38,6 +38,13 @@
             this.btn_Update = new System.Windows.Forms.Button();
             this.btn_Delete = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.JadwalID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NamaTanaman = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NamaLahan = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TanamanID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LahanID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TanggalTanam = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EstimasiPanen = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.jadwalTanamBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dB_SMJT_JadwalTanamSet = new Sistem_Monitoring_Jadwal_Tanam.DB_SMJT_JadwalTanamSet();
             this.label1 = new System.Windows.Forms.Label();
@@ -62,13 +69,6 @@
             this.jadwalTanamTableAdapter = new Sistem_Monitoring_Jadwal_Tanam.DB_SMJT_JadwalTanamSetTableAdapters.JadwalTanamTableAdapter();
             this.cmbTanaman = new System.Windows.Forms.ComboBox();
             this.cmbLahan = new System.Windows.Forms.ComboBox();
-            this.JadwalID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NamaTanaman = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NamaLahan = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TanamanID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LahanID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TanggalTanam = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.EstimasiPanen = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.jadwalTanamBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dB_SMJT_JadwalTanamSet)).BeginInit();
@@ -160,6 +160,65 @@
             this.dataGridView1.Size = new System.Drawing.Size(776, 249);
             this.dataGridView1.TabIndex = 4;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
+            // JadwalID
+            // 
+            this.JadwalID.DataPropertyName = "JadwalID";
+            this.JadwalID.HeaderText = "JadwalID";
+            this.JadwalID.MinimumWidth = 6;
+            this.JadwalID.Name = "JadwalID";
+            this.JadwalID.ReadOnly = true;
+            this.JadwalID.Width = 125;
+            // 
+            // NamaTanaman
+            // 
+            this.NamaTanaman.DataPropertyName = "NamaTanaman";
+            this.NamaTanaman.HeaderText = "NamaTanaman";
+            this.NamaTanaman.MinimumWidth = 6;
+            this.NamaTanaman.Name = "NamaTanaman";
+            this.NamaTanaman.Width = 125;
+            // 
+            // NamaLahan
+            // 
+            this.NamaLahan.DataPropertyName = "NamaLahan";
+            this.NamaLahan.HeaderText = "NamaLahan";
+            this.NamaLahan.MinimumWidth = 6;
+            this.NamaLahan.Name = "NamaLahan";
+            this.NamaLahan.Width = 125;
+            // 
+            // TanamanID
+            // 
+            this.TanamanID.DataPropertyName = "TanamanID";
+            this.TanamanID.HeaderText = "TanamanID";
+            this.TanamanID.MinimumWidth = 6;
+            this.TanamanID.Name = "TanamanID";
+            this.TanamanID.Visible = false;
+            this.TanamanID.Width = 125;
+            // 
+            // LahanID
+            // 
+            this.LahanID.DataPropertyName = "LahanID";
+            this.LahanID.HeaderText = "LahanID";
+            this.LahanID.MinimumWidth = 6;
+            this.LahanID.Name = "LahanID";
+            this.LahanID.Visible = false;
+            this.LahanID.Width = 125;
+            // 
+            // TanggalTanam
+            // 
+            this.TanggalTanam.DataPropertyName = "TanggalTanam";
+            this.TanggalTanam.HeaderText = "TanggalTanam";
+            this.TanggalTanam.MinimumWidth = 6;
+            this.TanggalTanam.Name = "TanggalTanam";
+            this.TanggalTanam.Width = 125;
+            // 
+            // EstimasiPanen
+            // 
+            this.EstimasiPanen.DataPropertyName = "EstimasiPanen";
+            this.EstimasiPanen.HeaderText = "EstimasiPanen";
+            this.EstimasiPanen.MinimumWidth = 6;
+            this.EstimasiPanen.Name = "EstimasiPanen";
+            this.EstimasiPanen.Width = 125;
             // 
             // jadwalTanamBindingSource
             // 
@@ -372,65 +431,6 @@
             this.cmbLahan.Name = "cmbLahan";
             this.cmbLahan.Size = new System.Drawing.Size(121, 24);
             this.cmbLahan.TabIndex = 21;
-            // 
-            // JadwalID
-            // 
-            this.JadwalID.DataPropertyName = "JadwalID";
-            this.JadwalID.HeaderText = "JadwalID";
-            this.JadwalID.MinimumWidth = 6;
-            this.JadwalID.Name = "JadwalID";
-            this.JadwalID.ReadOnly = true;
-            this.JadwalID.Width = 125;
-            // 
-            // NamaTanaman
-            // 
-            this.NamaTanaman.DataPropertyName = "NamaTanaman";
-            this.NamaTanaman.HeaderText = "NamaTanaman";
-            this.NamaTanaman.MinimumWidth = 6;
-            this.NamaTanaman.Name = "NamaTanaman";
-            this.NamaTanaman.Width = 125;
-            // 
-            // NamaLahan
-            // 
-            this.NamaLahan.DataPropertyName = "NamaLahan";
-            this.NamaLahan.HeaderText = "NamaLahan";
-            this.NamaLahan.MinimumWidth = 6;
-            this.NamaLahan.Name = "NamaLahan";
-            this.NamaLahan.Width = 125;
-            // 
-            // TanamanID
-            // 
-            this.TanamanID.DataPropertyName = "TanamanID";
-            this.TanamanID.HeaderText = "TanamanID";
-            this.TanamanID.MinimumWidth = 6;
-            this.TanamanID.Name = "TanamanID";
-            this.TanamanID.Visible = false;
-            this.TanamanID.Width = 125;
-            // 
-            // LahanID
-            // 
-            this.LahanID.DataPropertyName = "LahanID";
-            this.LahanID.HeaderText = "LahanID";
-            this.LahanID.MinimumWidth = 6;
-            this.LahanID.Name = "LahanID";
-            this.LahanID.Visible = false;
-            this.LahanID.Width = 125;
-            // 
-            // TanggalTanam
-            // 
-            this.TanggalTanam.DataPropertyName = "TanggalTanam";
-            this.TanggalTanam.HeaderText = "TanggalTanam";
-            this.TanggalTanam.MinimumWidth = 6;
-            this.TanggalTanam.Name = "TanggalTanam";
-            this.TanggalTanam.Width = 125;
-            // 
-            // EstimasiPanen
-            // 
-            this.EstimasiPanen.DataPropertyName = "EstimasiPanen";
-            this.EstimasiPanen.HeaderText = "EstimasiPanen";
-            this.EstimasiPanen.MinimumWidth = 6;
-            this.EstimasiPanen.Name = "EstimasiPanen";
-            this.EstimasiPanen.Width = 125;
             // 
             // FormJadwalTanam
             // 
