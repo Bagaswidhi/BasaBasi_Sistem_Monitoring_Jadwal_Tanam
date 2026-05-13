@@ -21,3 +21,18 @@
   - Search:
     
     <img width="749" height="492" alt="image" src="https://github.com/user-attachments/assets/0ee0c865-2e2f-48d2-b9c9-7ca98dc407f6" />
+
+- SQL Injection
+  - Pada TextBox txtNamaLahan, masukkan: 'OR 1=1 --
+    Kemudian klik tombol Test Injection.
+    
+    <img width="780" height="510" alt="image" src="https://github.com/user-attachments/assets/bcb5df88-856a-4d07-8a53-b9f65ec7133f" />
+
+  - Data sebelum SQL Injection:
+    
+    <img width="792" height="502" alt="image" src="https://github.com/user-attachments/assets/2655b5d4-4af3-412d-bf0a-b09a590e2339" />
+
+  - Data setelah SQL Injection
+    
+    <img width="815" height="515" alt="image" src="https://github.com/user-attachments/assets/a712e712-09ba-491f-a06f-58c2e2f98def" />
+
