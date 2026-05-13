@@ -200,30 +200,21 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
+                // 1. Jika kotak pencarian kosong, tampilkan semua data kembali
+                if (string.IsNullOrWhiteSpace(txt_Search.Text))
                 {
-                    conn.Open();
+                    dataTanamanBindingSource.RemoveFilter(); // Menghapus filter
                 }
-                dataGridView1.Rows.Clear();
-
-                string query = "SELECT * FROM DataTanaman WHERE NamaTanaman LIKE @SearchText";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@SearchText", "%" + txt_Search.Text + "%");
-
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+                else
                 {
-                    dataGridView1.Rows.Add(
-                        reader["TanamanID"].ToString(),
-                        reader["NamaTanaman"].ToString(),
-                        reader["LamaMasaTanam"].ToString()
-                        );
+                    // 2. Jika ada teks, saring data yang ada di BindingSource
+                    // Kita menggunakan Convert() agar tipe data angka (TanamanID) bisa dicari seperti teks (LIKE)
+                    dataTanamanBindingSource.Filter = $"Convert(TanamanID, 'System.String') LIKE '%{txt_Search.Text}%'";
                 }
-                reader.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error saat pencarian: " + ex.Message);
             }
         }
     }

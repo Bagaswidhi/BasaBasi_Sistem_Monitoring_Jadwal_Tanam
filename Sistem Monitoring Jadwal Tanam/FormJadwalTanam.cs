@@ -181,6 +181,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     conn.Open();
                 }
                 object result = null;
+                int jadwalIDTerpilih = Convert.ToInt32(dataGridView1.CurrentRow.Cells["JadwalID"].Value);
 
                 using (SqlCommand cmdCheck = new SqlCommand("sp_Get_LamaMasaTanam", conn))
                 {
@@ -205,7 +206,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 {
                     cmdUpdate.CommandType = CommandType.StoredProcedure;
 
-                    cmdUpdate.Parameters.AddWithValue("@JadwalID", Convert.ToInt32(idJadwalTerpilih));
+                    cmdUpdate.Parameters.AddWithValue("@JadwalID", jadwalIDTerpilih);
                     cmdUpdate.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
                     cmdUpdate.Parameters.AddWithValue("@LahanID", cmbLahan.SelectedValue);
                     cmdUpdate.Parameters.AddWithValue("@TanggalTanam", tanggalTanam);
@@ -245,12 +246,13 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     {
                         conn.Open();
                     }
+                    int jadwalIDTerpilih = Convert.ToInt32(dataGridView1.CurrentRow.Cells["JadwalID"].Value);
                     using (SqlCommand cmdDelete = new SqlCommand("sp_DeleteJadwal", conn))
                     {
                         cmdDelete.CommandType = CommandType.StoredProcedure;
 
                         // Masukkan parameter ID jadwal yang akan dihapus
-                        cmdDelete.Parameters.AddWithValue("@JadwalID", Convert.ToInt32(idJadwalTerpilih));
+                        cmdDelete.Parameters.AddWithValue("@JadwalID", jadwalIDTerpilih);
 
                         int result = cmdDelete.ExecuteNonQuery();
 
