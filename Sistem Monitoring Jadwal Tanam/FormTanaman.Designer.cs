@@ -165,7 +165,7 @@
             // 
             // txtLamaMasaTanam
             // 
-            this.txtLamaMasaTanam.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.dataTanamanBindingSource, "LamaMasaTanam", true));
+            this.txtLamaMasaTanam.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.dataTanamanBindingSource, "LamaMasaTanam", true, System.Windows.Forms.DataSourceUpdateMode.Never));
             this.txtLamaMasaTanam.Location = new System.Drawing.Point(600, 297);
             this.txtLamaMasaTanam.Multiline = true;
             this.txtLamaMasaTanam.Name = "txtLamaMasaTanam";

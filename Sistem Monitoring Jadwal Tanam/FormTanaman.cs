@@ -72,23 +72,17 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     txtLamaMasaTanam.Focus();
                     return;
                 }
-                string query = @"INSERT INTO DataTanaman (NamaTanaman, LamaMasaTanam) VALUES (@NamaTanaman, @LamaMasaTanam)";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@NamaTanaman", txtNamaTanaman.Text);
-                cmd.Parameters.AddWithValue("@LamaMasaTanam", txtLamaMasaTanam.Text);
-                int result = cmd.ExecuteNonQuery();
-
-                if (result > 0)
+                using (SqlCommand cmd = new SqlCommand("sp_InsertTanaman", conn))
                 {
-                    MessageBox.Show("Data berhasil ditambahkan.");
-                    txtNamaTanaman.Clear();
-                    txtLamaMasaTanam.Clear();
-                    btn_Load.PerformClick();
-                }
-                else
-                {
-                    MessageBox.Show("Gagal menambahkan data.");
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@NamaTanaman", txtNamaTanaman.Text);
+                    cmd.Parameters.AddWithValue("@LamaMasaTanam", txtLamaMasaTanam.Text);
+                    int result = cmd.ExecuteNonQuery();
+                    if (result > 0 )
+                    {
+                        MessageBox.Show("Data tanaman berhasil ditambahkan.");
+                        btn_Load.PerformClick();
+                    }
                 }
             }
             catch (Exception ex)
