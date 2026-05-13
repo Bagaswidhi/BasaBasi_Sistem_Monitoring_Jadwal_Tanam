@@ -30,27 +30,19 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     conn.Open();
                 }
 
-                dataGridView1.Rows.Clear();
-                dataGridView1.Columns.Clear();
-
-                dataGridView1.Columns.Add("TanamanID", "Tanaman ID");
-                dataGridView1.Columns.Add("NamaTanaman", "Nama Tanaman");
-                dataGridView1.Columns.Add("LamaMasaTanam", "Lama Masa Tanam (hari)");
-
-                string query = "SELECT * FROM DataTanaman";
-
+                string query = "SELECT * FROM v_GetTanaman";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
 
-                while (reader.Read())
-                {
-                    dataGridView1.Rows.Add(
-                        reader["TanamanID"].ToString(),
-                        reader["NamaTanaman"].ToString(),
-                        reader["LamaMasaTanam"].ToString()
-                        );
-                }
-                reader.Close();
+                // Menggunakan SqlDataAdapter untuk menarik data sekaligus
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+
+                // Masukkan semua data dari database ke dalam DataTable
+                adapter.Fill(dt);
+
+                // Berikan data tersebut ke BindingSource.
+                // DataGridView otomatis akan terisi dan ter-refresh!
+                dataTanamanBindingSource.DataSource = dt;
             }
             catch (Exception ex)
             {
@@ -189,6 +181,8 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 
         private void FormTanaman_Load(object sender, EventArgs e)
         {
+            // TODO: This line of code loads data into the 'dB_SMJT_DataTanamanSet.DataTanaman' table. You can move, or remove it, as needed.
+            this.dataTanamanTableAdapter.Fill(this.dB_SMJT_DataTanamanSet.DataTanaman);
             dataGridView1.ReadOnly = true;
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
