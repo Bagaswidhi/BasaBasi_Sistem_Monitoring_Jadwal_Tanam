@@ -330,7 +330,7 @@ BEGIN
     END
 END
 
-CREATE PROCEDURE sp_Injection
+ALTER PROCEDURE sp_Injection
     @LuasLahan NVARCHAR(MAX),
     @LahanID NVARCHAR(MAX)
 AS
@@ -339,6 +339,11 @@ BEGIN
     
     DECLARE @sqlQuery NVARCHAR(MAX);
     
+    IF EXISTS (SELECT 1 FROM DataLahan WHERE  NamaLahan = 'HACKED')
+    BEGIN
+        THROW 51000, 'Nama tidak boleh sama / harus unik',1;
+    END
+
     -- INI ADALAH CELAH KEAMANANNYA: Menggabungkan string secara mentah (Concatenation)
     SET @sqlQuery = 'UPDATE DataLahan SET NamaLahan = ''HACKED'', luas_lahan = ' + @LuasLahan + ' WHERE LahanID = ' + @LahanID;
     
