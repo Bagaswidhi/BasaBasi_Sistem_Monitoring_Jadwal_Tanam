@@ -118,6 +118,20 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 {
                     conn.Open();
                 }
+
+                if (cmbTanaman.SelectedValue is null)
+                {
+                    MessageBox.Show("Nama Tanaman tidak boleh kosong.");
+                    cmbTanaman.Focus();
+                    return;
+                }
+
+                if(cmbLahan.SelectedValue is null)
+                {
+                    MessageBox.Show("Nama lahan tidak boleh kosong.");
+                    cmbLahan.Focus();
+                    return;
+                }
                 object result = null;
 
                 using (SqlCommand cmdCheck = new SqlCommand("sp_Get_LamaMasaTanam", conn))
