@@ -147,7 +147,7 @@
             // 
             // txtLuasLahan
             // 
-            this.txtLuasLahan.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.dataLahanBindingSource, "luas_lahan", true));
+            this.txtLuasLahan.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.dataLahanBindingSource, "luas_lahan", true, System.Windows.Forms.DataSourceUpdateMode.Never));
             this.txtLuasLahan.Location = new System.Drawing.Point(607, 230);
             this.txtLuasLahan.Name = "txtLuasLahan";
             this.txtLuasLahan.Size = new System.Drawing.Size(100, 22);

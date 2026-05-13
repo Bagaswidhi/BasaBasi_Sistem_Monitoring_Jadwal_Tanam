@@ -42,23 +42,17 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     txtLuasLahan.Focus();
                     return;
                 }
-                string query = @"INSERT INTO DataLahan (NamaLahan, luas_Lahan) VALUES (@NamaLahan, @LuasLahan)";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@NamaLahan", txtNamaLahan.Text);
-                cmd.Parameters.AddWithValue("@LuasLahan", txtLuasLahan.Text);
-                int result = cmd.ExecuteNonQuery();
-
-                if (result > 0)
+                 using (SqlCommand cmd = new SqlCommand("sp_InsertLahan", conn))
                 {
-                    MessageBox.Show("Data berhasil ditambahkan.");
-                    txtNamaLahan.Clear();
-                    txtLuasLahan.Clear();
-                    btn_Load.PerformClick();
-                }
-                else
-                {
-                    MessageBox.Show("Gabisa nambahin data.");
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@NamaLahan", txtNamaLahan.Text);
+                    cmd.Parameters.AddWithValue("@luas_lahan", txtLuasLahan.Text);
+                    int result = cmd.ExecuteNonQuery();
+                    if (result < 0 )
+                    {
+                        MessageBox.Show("Data tanaman berhasil ditambahkan.");
+                        btn_Load.PerformClick();
+                    }
                 }
             }
             catch (Exception ex)
