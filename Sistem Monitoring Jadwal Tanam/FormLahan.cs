@@ -137,19 +137,20 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     MessageBoxIcon.Warning);
                 if (resultConfirm == DialogResult.Yes)
                 {
-                    string query = @"DELETE FROM DataLahan WHERE LahanID = @LahanID";
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@LahanID", txtLahanID.Text);
-                    int result = cmd.ExecuteNonQuery();
-                    if (result > 0)
+                    using (SqlCommand cmd = new SqlCommand("sp_DeleteLahan", conn))
                     {
-                        MessageBox.Show("Yeay, Data berhasil dihapus!");
-                        txtLahanID.Clear();
-                        btn_Load.PerformClick();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Yah, Datanya ga ketemu:(");
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@LahanID", Convert.ToInt32(txtLahanID.Text));
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result < 0)
+                        {
+                            MessageBox.Show("Data LahanID berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            btn_Load.PerformClick();
+                        }
                     }
                 }
             }

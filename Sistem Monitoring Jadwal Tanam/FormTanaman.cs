@@ -110,7 +110,6 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    // Masukkan ketiga parameter (ID, Nama, LamaTanam)
                     cmd.Parameters.AddWithValue("@TanamanID", Convert.ToInt32(txtTanamanID.Text));
                     cmd.Parameters.AddWithValue("@NamaTanaman", txtNamaTanaman.Text);
                     cmd.Parameters.AddWithValue("@LamaMasaTanam", txtLamaMasaTanam.Text);
@@ -157,7 +156,6 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                         {
                             MessageBox.Show("Data tanaman berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                            // Bersihkan textbox dan refresh tabel
                             btn_Load.PerformClick();
                         }
                     }
