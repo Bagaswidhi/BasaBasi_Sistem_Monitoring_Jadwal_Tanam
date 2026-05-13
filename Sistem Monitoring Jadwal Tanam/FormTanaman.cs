@@ -100,26 +100,28 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     conn.Open();
                 }
 
-                string query = @"UPDATE DataTanaman SET NamaTanaman = @NamaTanaman, 
-                                                        LamaMasaTanam = @LamaMasaTanam 
-                                                        WHERE TanamanID = @TanamanID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@NamaTanaman", txtNamaTanaman.Text);
-                cmd.Parameters.AddWithValue("@LamaMasaTanam", txtLamaMasaTanam.Text);
-                cmd.Parameters.AddWithValue("@TanamanID", txtTanamanID.Text);
-                int result = cmd.ExecuteNonQuery();
-
-                if (result > 0)
+                if (txtTanamanID.Text == "")
                 {
-                    MessageBox.Show("Data berhasil diperbarui.");
-                    txtNamaTanaman.Clear();
-                    txtLamaMasaTanam.Clear();
-                    txtTanamanID.Clear();
-                    btn_Load.PerformClick();
+                    MessageBox.Show("Pilih data yang ingin diubah dari tabel terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
-                else
+
+                using (SqlCommand cmd = new SqlCommand("sp_UpdateTanaman", conn))
                 {
-                    MessageBox.Show("Gagal memperbarui data.");
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Masukkan ketiga parameter (ID, Nama, LamaTanam)
+                    cmd.Parameters.AddWithValue("@TanamanID", Convert.ToInt32(txtTanamanID.Text));
+                    cmd.Parameters.AddWithValue("@NamaTanaman", txtNamaTanaman.Text);
+                    cmd.Parameters.AddWithValue("@LamaMasaTanam", txtLamaMasaTanam.Text);
+
+                    int result = cmd.ExecuteNonQuery();
+
+                    if (result < 0)
+                    {
+                        MessageBox.Show("Data tanaman berhasil diubah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        btn_Load.PerformClick();
+                    }
                 }
             }
             catch (Exception ex)
