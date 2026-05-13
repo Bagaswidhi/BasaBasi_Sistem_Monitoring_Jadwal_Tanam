@@ -78,7 +78,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     cmd.Parameters.AddWithValue("@NamaTanaman", txtNamaTanaman.Text);
                     cmd.Parameters.AddWithValue("@LamaMasaTanam", txtLamaMasaTanam.Text);
                     int result = cmd.ExecuteNonQuery();
-                    if (result > 0 )
+                    if (result < 0 )
                     {
                         MessageBox.Show("Data tanaman berhasil ditambahkan.");
                         btn_Load.PerformClick();
