@@ -145,19 +145,21 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     MessageBoxIcon.Warning);
                 if (resultConfirm == DialogResult.Yes)
                 {
-                    string query = @"DELETE FROM DataTanaman WHERE TanamanID = @TanamanID";
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@TanamanID", txtTanamanID.Text);
-                    int result = cmd.ExecuteNonQuery();
-                    if (result > 0)
+                    using (SqlCommand cmd = new SqlCommand("sp_DeleteTanaman", conn))
                     {
-                        MessageBox.Show("Data berhasil dihapus.");
-                        txtTanamanID.Clear();
-                        btn_Load.PerformClick();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Data tidak ditemukan");
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@TanamanID", Convert.ToInt32(txtTanamanID.Text));
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result < 0)
+                        {
+                            MessageBox.Show("Data tanaman berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // Bersihkan textbox dan refresh tabel
+                            btn_Load.PerformClick();
+                        }
                     }
                 }
             }
