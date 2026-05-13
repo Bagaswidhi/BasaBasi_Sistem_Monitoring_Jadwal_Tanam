@@ -111,11 +111,6 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 
         private void btn_Insert_Click(object sender, EventArgs e)
         {
-            if (cmbLahan.Text == "" || cmbTanaman.Text == "")
-            {
-                MessageBox.Show("ID Tanaman atau ID Lahan harus diisi.");
-                return;
-            }
             try
             {
                 // Mengecek Data Tanaman pada tabel DataTanaman
@@ -123,12 +118,15 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 {
                     conn.Open();
                 }
-                string queryCheck = "SELECT LamaMasaTanam FROM DataTanaman WHERE TanamanID = @TanamanID";
-                SqlCommand cmdCheck = new SqlCommand(queryCheck, conn);
-                cmdCheck.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
+                object result = null;
 
-                object result = cmdCheck.ExecuteScalar();
-
+                using (SqlCommand cmdCheck = new SqlCommand("sp_Get_LamaMasaTanam", conn))
+                {
+                    cmdCheck.CommandType = CommandType.StoredProcedure;
+                    cmdCheck.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
+                    result = cmdCheck.ExecuteScalar();
+                }
+                
                 if (result == null)
                 {
                     MessageBox.Show("Tanaman dengan ID tersebut tidak ditemukan.");
@@ -144,18 +142,28 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 txtEstimasiPanen.Text = estimasiPanen.ToString("yyyy-MM-dd");
 
 
-                string querySimpan = @"INSERT INTO JadwalTanam (TanamanID, LahanID, TanggalTanam, EstimasiPanen) 
-                                       VALUES (@TanamanID, @LahanID, @TanggalTanam, @EstimasiPanen)";
-                SqlCommand cmdSimpan = new SqlCommand(querySimpan, conn);
-                cmdSimpan.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
-                cmdSimpan.Parameters.AddWithValue("@LahanID", cmbLahan.SelectedValue);
-                cmdSimpan.Parameters.AddWithValue("@TanggalTanam", tanggalTanam);
-                cmdSimpan.Parameters.AddWithValue("@EstimasiPanen", estimasiPanen);
-                cmdSimpan.ExecuteNonQuery();
+                using (SqlCommand cmdSimpan = new SqlCommand("sp_InsertJadwal", conn))
+                {
+                    cmdSimpan.CommandType = CommandType.StoredProcedure;
 
+                    // Masukkan 4 parameter yang diminta SP
+                    cmdSimpan.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
+                    cmdSimpan.Parameters.AddWithValue("@LahanID", cmbLahan.SelectedValue);
+                    cmdSimpan.Parameters.AddWithValue("@TanggalTanam", tanggalTanam);
+                    cmdSimpan.Parameters.AddWithValue("@EstimasiPanen", estimasiPanen);
 
-                MessageBox.Show("Jadwal tanam berhasil disimpan.");
-                btn_Load.PerformClick();
+                    int resultSimpan = cmdSimpan.ExecuteNonQuery();
+
+                    if (resultSimpan < 0)
+                    {
+                        MessageBox.Show("Jadwal tanam berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        btn_Load.PerformClick();
+                        cmbTanaman.SelectedIndex = -1;
+                        cmbLahan.SelectedIndex = -1;
+                        txtEstimasiPanen.Clear();
+                    }
+                }
             }
             catch (Exception ex)
             {
