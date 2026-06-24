@@ -62,6 +62,8 @@
             this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this.dataTanamanTableAdapter = new Sistem_Monitoring_Jadwal_Tanam.DB_SMJT_DataTanamanSetTableAdapters.DataTanamanTableAdapter();
+            this.btnImpExcel = new System.Windows.Forms.Button();
+            this.btnImpDatabase = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTanamanBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dB_SMJT_DataTanamanSet)).BeginInit();
@@ -164,7 +166,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(597, 178);
+            this.label2.Location = new System.Drawing.Point(597, 141);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(105, 16);
             this.label2.TabIndex = 6;
@@ -173,7 +175,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(597, 278);
+            this.label3.Location = new System.Drawing.Point(597, 200);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(124, 16);
             this.label3.TabIndex = 7;
@@ -182,7 +184,7 @@
             // txtNamaTanaman
             // 
             this.txtNamaTanaman.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.dataTanamanBindingSource, "NamaTanaman", true));
-            this.txtNamaTanaman.Location = new System.Drawing.Point(600, 197);
+            this.txtNamaTanaman.Location = new System.Drawing.Point(600, 160);
             this.txtNamaTanaman.Multiline = true;
             this.txtNamaTanaman.Name = "txtNamaTanaman";
             this.txtNamaTanaman.Size = new System.Drawing.Size(165, 31);
@@ -191,7 +193,7 @@
             // txtLamaMasaTanam
             // 
             this.txtLamaMasaTanam.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.dataTanamanBindingSource, "LamaMasaTanam", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.txtLamaMasaTanam.Location = new System.Drawing.Point(600, 297);
+            this.txtLamaMasaTanam.Location = new System.Drawing.Point(600, 219);
             this.txtLamaMasaTanam.Multiline = true;
             this.txtLamaMasaTanam.Name = "txtLamaMasaTanam";
             this.txtLamaMasaTanam.Size = new System.Drawing.Size(165, 31);
@@ -362,11 +364,33 @@
             // 
             this.dataTanamanTableAdapter.ClearBeforeFill = true;
             // 
+            // btnImpExcel
+            // 
+            this.btnImpExcel.Location = new System.Drawing.Point(600, 265);
+            this.btnImpExcel.Name = "btnImpExcel";
+            this.btnImpExcel.Size = new System.Drawing.Size(165, 44);
+            this.btnImpExcel.TabIndex = 18;
+            this.btnImpExcel.Text = "Import dari Excel";
+            this.btnImpExcel.UseVisualStyleBackColor = true;
+            this.btnImpExcel.Click += new System.EventHandler(this.btnImpExcel_Click);
+            // 
+            // btnImpDatabase
+            // 
+            this.btnImpDatabase.Location = new System.Drawing.Point(600, 315);
+            this.btnImpDatabase.Name = "btnImpDatabase";
+            this.btnImpDatabase.Size = new System.Drawing.Size(165, 44);
+            this.btnImpDatabase.TabIndex = 19;
+            this.btnImpDatabase.Text = "Import ke Database";
+            this.btnImpDatabase.UseVisualStyleBackColor = true;
+            this.btnImpDatabase.Click += new System.EventHandler(this.btnImpDatabase_Click);
+            // 
             // FormTanaman
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnImpDatabase);
+            this.Controls.Add(this.btnImpExcel);
             this.Controls.Add(this.bindingNavigator1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txt_Search);
@@ -382,8 +406,9 @@
             this.Controls.Add(this.btn_Update);
             this.Controls.Add(this.btn_Insert);
             this.Controls.Add(this.btn_Load);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "FormTanaman";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FormTanaman";
             this.Load += new System.EventHandler(this.FormTanaman_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -431,5 +456,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TanamanID;
         private System.Windows.Forms.DataGridViewTextBoxColumn NamaTanaman;
         private System.Windows.Forms.DataGridViewTextBoxColumn LamaMasaTanam;
+        private System.Windows.Forms.Button btnImpExcel;
+        private System.Windows.Forms.Button btnImpDatabase;
     }
 }

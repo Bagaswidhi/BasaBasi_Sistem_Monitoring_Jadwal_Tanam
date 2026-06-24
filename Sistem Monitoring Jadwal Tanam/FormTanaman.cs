@@ -1,9 +1,11 @@
-﻿using System;
+﻿using ExcelDataReader;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -232,6 +234,38 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             catch (Exception ex)
             {
                 MessageBox.Show("Error saat pencarian: " + ex.Message);
+            }
+        }
+
+        private void btnImpExcel_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Excel Workbook|*.xlsx;*.xls" })
+            {
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+                    using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                    {
+                        using (var reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream))
+                        {
+                            var result = reader.AsDataSet(new ExcelDataReader.ExcelDataSetConfiguration()
+                            {
+                                ConfigureDataTable = (_) => new ExcelDataReader.ExcelDataTableConfiguration() { UseHeaderRow = true }
+                            });
+                            DataTable dtExcel = result.Tables[0];
+                            dataGridView1.DataSource = dtExcel;
+                            dataGridView1.Enabled = false;
+
+                            btnImpExcel.Enabled = true;
+                            btn_Load.Enabled = false;
+                            btn_Insert.Enabled = false;
+                            btn_Update.Enabled = false;
+                            btn_Delete.Enabled = false;
+                        }
+                        MessageBox.Show("Import data dari Excel berhasil");
+                        btn_Load.PerformClick();
+                    }
+                }
             }
         }
     }
