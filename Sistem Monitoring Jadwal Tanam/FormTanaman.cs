@@ -13,36 +13,45 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 {
     public partial class FormTanaman : Form
     {
-        private readonly SqlConnection conn;
-        private readonly string connectionString = "Data Source=MSI\\BAGAS;Initial Catalog=DBSistemMonitoringMasaTanam;Integrated Security=True";
+        KoneksiDB conn = new KoneksiDB();
+        //private readonly SqlConnection conn;
+        //private readonly string connectionString = "Data Source=MSI\\BAGAS;Initial Catalog=DBSistemMonitoringMasaTanam;Integrated Security=True";
         public FormTanaman()
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
+            using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+            }
         }
 
         private void btn_Load_Click(object sender, EventArgs e)
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 {
-                    conn.Open();
+                    if (conn.State == System.Data.ConnectionState.Closed)
+                    {
+                        conn.Open();
+                    }
+                    string query = "SELECT * FROM v_GetTanaman";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Menggunakan SqlDataAdapter untuk menarik data sekaligus
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+
+                    // Masukkan semua data dari database ke dalam DataTable
+                    adapter.Fill(dt);
+
+                    // Berikan data tersebut ke BindingSource.
+                    // DataGridView otomatis akan terisi dan ter-refresh!
+                    dataTanamanBindingSource.DataSource = dt;
                 }
-
-                string query = "SELECT * FROM v_GetTanaman";
-                SqlCommand cmd = new SqlCommand(query, conn);
-
-                // Menggunakan SqlDataAdapter untuk menarik data sekaligus
-                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-
-                // Masukkan semua data dari database ke dalam DataTable
-                adapter.Fill(dt);
-
-                // Berikan data tersebut ke BindingSource.
-                // DataGridView otomatis akan terisi dan ter-refresh!
-                dataTanamanBindingSource.DataSource = dt;
             }
             catch (Exception ex)
             {
@@ -54,34 +63,37 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 {
-                    conn.Open();
-                }
-
-                if (txtNamaTanaman.Text == "")
-                {
-                    MessageBox.Show("Nama Tanaman tidak boleh kosong.");
-                    txtNamaTanaman.Focus();
-                    return;
-                }
-
-                if (txtLamaMasaTanam.Text == "")
-                {
-                    MessageBox.Show("Lama Masa Tanam tidak boleh kosong.");
-                    txtLamaMasaTanam.Focus();
-                    return;
-                }
-                using (SqlCommand cmd = new SqlCommand("sp_InsertTanaman", conn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@NamaTanaman", txtNamaTanaman.Text);
-                    cmd.Parameters.AddWithValue("@LamaMasaTanam", txtLamaMasaTanam.Text);
-                    int result = cmd.ExecuteNonQuery();
-                    if (result < 0 )
+                    if (conn.State == System.Data.ConnectionState.Closed)
                     {
-                        MessageBox.Show("Data tanaman berhasil ditambahkan.");
-                        btn_Load.PerformClick();
+                        conn.Open();
+                    }
+
+                    if (txtNamaTanaman.Text == "")
+                    {
+                        MessageBox.Show("Nama Tanaman tidak boleh kosong.");
+                        txtNamaTanaman.Focus();
+                        return;
+                    }
+
+                    if (txtLamaMasaTanam.Text == "")
+                    {
+                        MessageBox.Show("Lama Masa Tanam tidak boleh kosong.");
+                        txtLamaMasaTanam.Focus();
+                        return;
+                    }
+                    using (SqlCommand cmd = new SqlCommand("sp_InsertTanaman", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@NamaTanaman", txtNamaTanaman.Text);
+                        cmd.Parameters.AddWithValue("@LamaMasaTanam", txtLamaMasaTanam.Text);
+                        int result = cmd.ExecuteNonQuery();
+                        if (result < 0)
+                        {
+                            MessageBox.Show("Data tanaman berhasil ditambahkan.");
+                            btn_Load.PerformClick();
+                        }
                     }
                 }
             }
@@ -95,31 +107,33 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 {
-                    conn.Open();
-                }
-
-                if (txtTanamanID.Text == "")
-                {
-                    MessageBox.Show("Pilih data yang ingin diubah dari tabel terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                using (SqlCommand cmd = new SqlCommand("sp_UpdateTanaman", conn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@TanamanID", Convert.ToInt32(txtTanamanID.Text));
-                    cmd.Parameters.AddWithValue("@NamaTanaman", txtNamaTanaman.Text);
-                    cmd.Parameters.AddWithValue("@LamaMasaTanam", txtLamaMasaTanam.Text);
-
-                    int result = cmd.ExecuteNonQuery();
-
-                    if (result < 0)
+                    if (conn.State == System.Data.ConnectionState.Closed)
                     {
-                        MessageBox.Show("Data tanaman berhasil diubah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        btn_Load.PerformClick();
+                        conn.Open();
+                    }
+                    if (txtTanamanID.Text == "")
+                    {
+                        MessageBox.Show("Pilih data yang ingin diubah dari tabel terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    using (SqlCommand cmd = new SqlCommand("sp_UpdateTanaman", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@TanamanID", Convert.ToInt32(txtTanamanID.Text));
+                        cmd.Parameters.AddWithValue("@NamaTanaman", txtNamaTanaman.Text);
+                        cmd.Parameters.AddWithValue("@LamaMasaTanam", txtLamaMasaTanam.Text);
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result < 0)
+                        {
+                            MessageBox.Show("Data tanaman berhasil diubah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            btn_Load.PerformClick();
+                        }
                     }
                 }
             }
@@ -133,30 +147,33 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 {
-                    conn.Open();
-                }
-                DialogResult resultConfirm = MessageBox.Show(
-                    "Apakah Anda yakin ingin menghapus data ini?",
-                    "Konfirmasi Hapus",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning);
-                if (resultConfirm == DialogResult.Yes)
-                {
-                    using (SqlCommand cmd = new SqlCommand("sp_DeleteTanaman", conn))
+                    if (conn.State == System.Data.ConnectionState.Closed)
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-
-                        cmd.Parameters.AddWithValue("@TanamanID", Convert.ToInt32(txtTanamanID.Text));
-
-                        int result = cmd.ExecuteNonQuery();
-
-                        if (result < 0)
+                        conn.Open();
+                    }
+                    DialogResult resultConfirm = MessageBox.Show(
+                        "Apakah Anda yakin ingin menghapus data ini?",
+                        "Konfirmasi Hapus",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning);
+                    if (resultConfirm == DialogResult.Yes)
+                    {
+                        using (SqlCommand cmd = new SqlCommand("sp_DeleteTanaman", conn))
                         {
-                            MessageBox.Show("Data tanaman berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            cmd.CommandType = CommandType.StoredProcedure;
 
-                            btn_Load.PerformClick();
+                            cmd.Parameters.AddWithValue("@TanamanID", Convert.ToInt32(txtTanamanID.Text));
+
+                            int result = cmd.ExecuteNonQuery();
+
+                            if (result < 0)
+                            {
+                                MessageBox.Show("Data tanaman berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                                btn_Load.PerformClick();
+                            }
                         }
                     }
                 }
