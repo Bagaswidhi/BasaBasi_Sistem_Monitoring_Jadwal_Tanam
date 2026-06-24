@@ -20,7 +20,13 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             InitializeComponent();
             conn = new SqlConnection(connectionString);
-            dtpTanggalTanam.MaxDate = DateTime.Today;
+
+            DateTime today = DateTime.Today;
+            DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
+            DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+
+            dtpTanggalTanam.MaxDate = lastDayOfMonth;
+            dtpTanggalTanam.MinDate = firstDayOfMonth;
         }
 
         private void MuatComboBox()
@@ -182,7 +188,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Peringatan Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -246,7 +252,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Peringatan Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
