@@ -285,6 +285,8 @@ namespace Sistem_Monitoring_Jadwal_Tanam {
             
             private global::System.Data.DataColumn columnluas_lahan;
             
+            private global::System.Data.DataColumn columnFoto;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "18.0.0.0")]
             public DataLahanDataTable() {
@@ -344,6 +346,14 @@ namespace Sistem_Monitoring_Jadwal_Tanam {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "18.0.0.0")]
+            public global::System.Data.DataColumn FotoColumn {
+                get {
+                    return this.columnFoto;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "18.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -379,12 +389,13 @@ namespace Sistem_Monitoring_Jadwal_Tanam {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "18.0.0.0")]
-            public DataLahanRow AddDataLahanRow(string NamaLahan, double luas_lahan) {
+            public DataLahanRow AddDataLahanRow(string NamaLahan, double luas_lahan, byte[] Foto) {
                 DataLahanRow rowDataLahanRow = ((DataLahanRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
                         NamaLahan,
-                        luas_lahan};
+                        luas_lahan,
+                        Foto};
                 rowDataLahanRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataLahanRow);
                 return rowDataLahanRow;
@@ -417,6 +428,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam {
                 this.columnLahanID = base.Columns["LahanID"];
                 this.columnNamaLahan = base.Columns["NamaLahan"];
                 this.columnluas_lahan = base.Columns["luas_lahan"];
+                this.columnFoto = base.Columns["Foto"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -428,6 +440,8 @@ namespace Sistem_Monitoring_Jadwal_Tanam {
                 base.Columns.Add(this.columnNamaLahan);
                 this.columnluas_lahan = new global::System.Data.DataColumn("luas_lahan", typeof(double), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnluas_lahan);
+                this.columnFoto = new global::System.Data.DataColumn("Foto", typeof(byte[]), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFoto);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnLahanID}, true));
                 this.columnLahanID.AutoIncrement = true;
@@ -611,6 +625,34 @@ namespace Sistem_Monitoring_Jadwal_Tanam {
                     this[this.tableDataLahan.luas_lahanColumn] = value;
                 }
             }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "18.0.0.0")]
+            public byte[] Foto {
+                get {
+                    try {
+                        return ((byte[])(this[this.tableDataLahan.FotoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Foto\' in table \'DataLahan\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDataLahan.FotoColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "18.0.0.0")]
+            public bool IsFotoNull() {
+                return this.IsNull(this.tableDataLahan.FotoColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "18.0.0.0")]
+            public void SetFotoNull() {
+                this[this.tableDataLahan.FotoColumn] = global::System.Convert.DBNull;
+            }
         }
         
         /// <summary>
@@ -775,30 +817,33 @@ namespace Sistem_Monitoring_Jadwal_Tanam.DB_SMJT_DataLahanSetTableAdapters {
             tableMapping.ColumnMappings.Add("LahanID", "LahanID");
             tableMapping.ColumnMappings.Add("NamaLahan", "NamaLahan");
             tableMapping.ColumnMappings.Add("luas_lahan", "luas_lahan");
+            tableMapping.ColumnMappings.Add("Foto", "Foto");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = "DELETE FROM [dbo].[DataLahan] WHERE (([LahanID] = @Original_LahanID) AND ([NamaLa" +
-                "han] = @Original_NamaLahan) AND ([luas_lahan] = @Original_luas_lahan))";
+            this._adapter.DeleteCommand.CommandText = "DELETE FROM [DataLahan] WHERE (([LahanID] = @Original_LahanID) AND ([NamaLahan] =" +
+                " @Original_NamaLahan) AND ([luas_lahan] = @Original_luas_lahan))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_LahanID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "LahanID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_NamaLahan", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "NamaLahan", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_luas_lahan", global::System.Data.SqlDbType.Float, 0, global::System.Data.ParameterDirection.Input, 0, 0, "luas_lahan", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[DataLahan] ([NamaLahan], [luas_lahan]) VALUES (@NamaLahan, @lu" +
-                "as_lahan);\r\nSELECT LahanID, NamaLahan, luas_lahan FROM DataLahan WHERE (LahanID " +
-                "= SCOPE_IDENTITY())";
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [DataLahan] ([NamaLahan], [luas_lahan], [Foto]) VALUES (@NamaLahan, @" +
+                "luas_lahan, @Foto);\r\nSELECT LahanID, NamaLahan, luas_lahan, Foto FROM DataLahan " +
+                "WHERE (LahanID = SCOPE_IDENTITY())";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@NamaLahan", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "NamaLahan", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@luas_lahan", global::System.Data.SqlDbType.Float, 0, global::System.Data.ParameterDirection.Input, 0, 0, "luas_lahan", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Foto", global::System.Data.SqlDbType.VarBinary, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Foto", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [dbo].[DataLahan] SET [NamaLahan] = @NamaLahan, [luas_lahan] = @luas_lahan WHERE (([LahanID] = @Original_LahanID) AND ([NamaLahan] = @Original_NamaLahan) AND ([luas_lahan] = @Original_luas_lahan));
-SELECT LahanID, NamaLahan, luas_lahan FROM DataLahan WHERE (LahanID = @LahanID)";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE [DataLahan] SET [NamaLahan] = @NamaLahan, [luas_lahan] = @luas_lahan, [Foto] = @Foto WHERE (([LahanID] = @Original_LahanID) AND ([NamaLahan] = @Original_NamaLahan) AND ([luas_lahan] = @Original_luas_lahan));
+SELECT LahanID, NamaLahan, luas_lahan, Foto FROM DataLahan WHERE (LahanID = @LahanID)";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@NamaLahan", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "NamaLahan", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@luas_lahan", global::System.Data.SqlDbType.Float, 0, global::System.Data.ParameterDirection.Input, 0, 0, "luas_lahan", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Foto", global::System.Data.SqlDbType.VarBinary, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Foto", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_LahanID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "LahanID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_NamaLahan", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "NamaLahan", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_luas_lahan", global::System.Data.SqlDbType.Float, 0, global::System.Data.ParameterDirection.Input, 0, 0, "luas_lahan", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
@@ -818,7 +863,7 @@ SELECT LahanID, NamaLahan, luas_lahan FROM DataLahan WHERE (LahanID = @LahanID)"
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT LahanID, NamaLahan, luas_lahan FROM dbo.DataLahan";
+            this._commandCollection[0].CommandText = "SELECT LahanID, NamaLahan, luas_lahan, Foto\r\nFROM     DataLahan";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -908,7 +953,7 @@ SELECT LahanID, NamaLahan, luas_lahan FROM DataLahan WHERE (LahanID = @LahanID)"
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "18.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(string NamaLahan, double luas_lahan) {
+        public virtual int Insert(string NamaLahan, double luas_lahan, byte[] Foto) {
             if ((NamaLahan == null)) {
                 throw new global::System.ArgumentNullException("NamaLahan");
             }
@@ -916,6 +961,12 @@ SELECT LahanID, NamaLahan, luas_lahan FROM DataLahan WHERE (LahanID = @LahanID)"
                 this.Adapter.InsertCommand.Parameters[0].Value = ((string)(NamaLahan));
             }
             this.Adapter.InsertCommand.Parameters[1].Value = ((double)(luas_lahan));
+            if ((Foto == null)) {
+                this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[2].Value = ((byte[])(Foto));
+            }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -936,7 +987,7 @@ SELECT LahanID, NamaLahan, luas_lahan FROM DataLahan WHERE (LahanID = @LahanID)"
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "18.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string NamaLahan, double luas_lahan, int Original_LahanID, string Original_NamaLahan, double Original_luas_lahan, int LahanID) {
+        public virtual int Update(string NamaLahan, double luas_lahan, byte[] Foto, int Original_LahanID, string Original_NamaLahan, double Original_luas_lahan, int LahanID) {
             if ((NamaLahan == null)) {
                 throw new global::System.ArgumentNullException("NamaLahan");
             }
@@ -944,15 +995,21 @@ SELECT LahanID, NamaLahan, luas_lahan FROM DataLahan WHERE (LahanID = @LahanID)"
                 this.Adapter.UpdateCommand.Parameters[0].Value = ((string)(NamaLahan));
             }
             this.Adapter.UpdateCommand.Parameters[1].Value = ((double)(luas_lahan));
-            this.Adapter.UpdateCommand.Parameters[2].Value = ((int)(Original_LahanID));
+            if ((Foto == null)) {
+                this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[2].Value = ((byte[])(Foto));
+            }
+            this.Adapter.UpdateCommand.Parameters[3].Value = ((int)(Original_LahanID));
             if ((Original_NamaLahan == null)) {
                 throw new global::System.ArgumentNullException("Original_NamaLahan");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[3].Value = ((string)(Original_NamaLahan));
+                this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(Original_NamaLahan));
             }
-            this.Adapter.UpdateCommand.Parameters[4].Value = ((double)(Original_luas_lahan));
-            this.Adapter.UpdateCommand.Parameters[5].Value = ((int)(LahanID));
+            this.Adapter.UpdateCommand.Parameters[5].Value = ((double)(Original_luas_lahan));
+            this.Adapter.UpdateCommand.Parameters[6].Value = ((int)(LahanID));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -973,8 +1030,8 @@ SELECT LahanID, NamaLahan, luas_lahan FROM DataLahan WHERE (LahanID = @LahanID)"
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "18.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string NamaLahan, double luas_lahan, int Original_LahanID, string Original_NamaLahan, double Original_luas_lahan) {
-            return this.Update(NamaLahan, luas_lahan, Original_LahanID, Original_NamaLahan, Original_luas_lahan, Original_LahanID);
+        public virtual int Update(string NamaLahan, double luas_lahan, byte[] Foto, int Original_LahanID, string Original_NamaLahan, double Original_luas_lahan) {
+            return this.Update(NamaLahan, luas_lahan, Foto, Original_LahanID, Original_NamaLahan, Original_luas_lahan, Original_LahanID);
         }
     }
     

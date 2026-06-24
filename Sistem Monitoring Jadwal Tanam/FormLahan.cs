@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using System.Windows.Forms;
 
 namespace Sistem_Monitoring_Jadwal_Tanam
 {
-    public partial class FormLahan: Form
+    public partial class FormLahan : Form
     {
         KoneksiDB conn = new KoneksiDB();
         //private readonly SqlConnection conn;
@@ -53,11 +54,14 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     }
                     using (SqlCommand cmd = new SqlCommand("sp_InsertLahan", conn))
                     {
+                        byte[] fotoBiner = ConvertImageToBytes(boxGambar);
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@NamaLahan", txtNamaLahan.Text);
                         cmd.Parameters.AddWithValue("@luas_lahan", txtLuasLahan.Text);
+                        cmd.Parameters.AddWithValue("@Foto", fotoBiner);
+                        
                         int result = cmd.ExecuteNonQuery();
-                        if (result < 0 )
+                        if (result < 0)
                         {
                             MessageBox.Show("Data tanaman berhasil ditambahkan.");
                             btn_Load.PerformClick();
@@ -124,9 +128,11 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
+                        byte[] fotoBiner = ConvertImageToBytes(boxGambar);
                         cmd.Parameters.AddWithValue("@LahanID", Convert.ToInt32(txtLahanID.Text));
                         cmd.Parameters.AddWithValue("@NamaLahan", txtNamaLahan.Text);
                         cmd.Parameters.AddWithValue("@luas_lahan", txtLuasLahan.Text);
+                        cmd.Parameters.AddWithValue("@Foto", fotoBiner);
 
                         int result = cmd.ExecuteNonQuery();
 
@@ -137,7 +143,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                         }
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -293,6 +299,48 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        private void boxGambar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btn_UploadGambar_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                // Filter file agar hanya bisa memilih gambar
+                ofd.Filter = "Image Files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        // Tampilkan gambar ke PictureBox
+                        boxGambar.Image = Image.FromFile(ofd.FileName);
+                        boxGambar.SizeMode = PictureBoxSizeMode.StretchImage; // Agar gambar pas di dalam kotak
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Gagal memuat gambar: " + ex.Message);
+                    }
+                }
+            }
+        }
+        private byte[] ConvertImageToBytes(PictureBox pb)
+        {
+            if (pb.Image == null)
+            {
+                return null;
+            }
+
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            {
+                pb.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                return ms.ToArray();
             }
         }
     }

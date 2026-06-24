@@ -35,11 +35,6 @@
             this.btn_Update = new System.Windows.Forms.Button();
             this.btn_Delete = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.LahanID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NamaLahan = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.luas_lahan = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataLahanBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dB_SMJT_DataLahanSet = new Sistem_Monitoring_Jadwal_Tanam.DB_SMJT_DataLahanSet();
             this.btn_Back = new System.Windows.Forms.Button();
             this.txtNamaLahan = new System.Windows.Forms.TextBox();
             this.txtLuasLahan = new System.Windows.Forms.TextBox();
@@ -61,14 +56,23 @@
             this.bindingNavigatorMoveNextItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.dataLahanTableAdapter = new Sistem_Monitoring_Jadwal_Tanam.DB_SMJT_DataLahanSetTableAdapters.DataLahanTableAdapter();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnInjection = new System.Windows.Forms.Button();
+            this.boxGambar = new System.Windows.Forms.PictureBox();
+            this.btn_UploadGambar = new System.Windows.Forms.Button();
+            this.dataLahanBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dB_SMJT_DataLahanSet = new Sistem_Monitoring_Jadwal_Tanam.DB_SMJT_DataLahanSet();
+            this.dataLahanTableAdapter = new Sistem_Monitoring_Jadwal_Tanam.DB_SMJT_DataLahanSetTableAdapters.DataLahanTableAdapter();
+            this.LahanID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NamaLahan = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.luas_lahan = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Foto = new System.Windows.Forms.DataGridViewImageColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataLahanBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dB_SMJT_DataLahanSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
             this.bindingNavigator1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.boxGambar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataLahanBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dB_SMJT_DataLahanSet)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_Insert
@@ -118,50 +122,16 @@
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.LahanID,
             this.NamaLahan,
-            this.luas_lahan});
+            this.luas_lahan,
+            this.Foto});
             this.dataGridView1.DataSource = this.dataLahanBindingSource;
             this.dataGridView1.Location = new System.Drawing.Point(12, 76);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(517, 306);
+            this.dataGridView1.Size = new System.Drawing.Size(564, 306);
             this.dataGridView1.TabIndex = 4;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            // 
-            // LahanID
-            // 
-            this.LahanID.DataPropertyName = "LahanID";
-            this.LahanID.HeaderText = "LahanID";
-            this.LahanID.MinimumWidth = 6;
-            this.LahanID.Name = "LahanID";
-            this.LahanID.ReadOnly = true;
-            this.LahanID.Width = 125;
-            // 
-            // NamaLahan
-            // 
-            this.NamaLahan.DataPropertyName = "NamaLahan";
-            this.NamaLahan.HeaderText = "NamaLahan";
-            this.NamaLahan.MinimumWidth = 6;
-            this.NamaLahan.Name = "NamaLahan";
-            this.NamaLahan.Width = 125;
-            // 
-            // luas_lahan
-            // 
-            this.luas_lahan.DataPropertyName = "luas_lahan";
-            this.luas_lahan.HeaderText = "luas_lahan";
-            this.luas_lahan.MinimumWidth = 6;
-            this.luas_lahan.Name = "luas_lahan";
-            this.luas_lahan.Width = 125;
-            // 
-            // dataLahanBindingSource
-            // 
-            this.dataLahanBindingSource.DataMember = "DataLahan";
-            this.dataLahanBindingSource.DataSource = this.dB_SMJT_DataLahanSet;
-            // 
-            // dB_SMJT_DataLahanSet
-            // 
-            this.dB_SMJT_DataLahanSet.DataSetName = "DB_SMJT_DataLahanSet";
-            this.dB_SMJT_DataLahanSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // btn_Back
             // 
@@ -177,23 +147,23 @@
             // txtNamaLahan
             // 
             this.txtNamaLahan.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.dataLahanBindingSource, "NamaLahan", true));
-            this.txtNamaLahan.Location = new System.Drawing.Point(607, 173);
+            this.txtNamaLahan.Location = new System.Drawing.Point(607, 135);
             this.txtNamaLahan.Name = "txtNamaLahan";
-            this.txtNamaLahan.Size = new System.Drawing.Size(100, 22);
+            this.txtNamaLahan.Size = new System.Drawing.Size(162, 22);
             this.txtNamaLahan.TabIndex = 6;
             // 
             // txtLuasLahan
             // 
             this.txtLuasLahan.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.dataLahanBindingSource, "luas_lahan", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.txtLuasLahan.Location = new System.Drawing.Point(607, 230);
+            this.txtLuasLahan.Location = new System.Drawing.Point(607, 180);
             this.txtLuasLahan.Name = "txtLuasLahan";
-            this.txtLuasLahan.Size = new System.Drawing.Size(100, 22);
+            this.txtLuasLahan.Size = new System.Drawing.Size(162, 22);
             this.txtLuasLahan.TabIndex = 7;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(604, 95);
+            this.label1.Location = new System.Drawing.Point(604, 74);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(57, 16);
             this.label1.TabIndex = 8;
@@ -202,16 +172,16 @@
             // txtLahanID
             // 
             this.txtLahanID.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.dataLahanBindingSource, "LahanID", true));
-            this.txtLahanID.Location = new System.Drawing.Point(607, 114);
+            this.txtLahanID.Location = new System.Drawing.Point(607, 93);
             this.txtLahanID.Name = "txtLahanID";
             this.txtLahanID.ReadOnly = true;
-            this.txtLahanID.Size = new System.Drawing.Size(100, 22);
+            this.txtLahanID.Size = new System.Drawing.Size(162, 22);
             this.txtLahanID.TabIndex = 9;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(604, 154);
+            this.label2.Location = new System.Drawing.Point(604, 116);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(84, 16);
             this.label2.TabIndex = 10;
@@ -220,7 +190,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(604, 211);
+            this.label3.Location = new System.Drawing.Point(604, 161);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(76, 16);
             this.label3.TabIndex = 11;
@@ -239,7 +209,7 @@
             // 
             this.text_Search.Location = new System.Drawing.Point(64, 38);
             this.text_Search.Name = "text_Search";
-            this.text_Search.Size = new System.Drawing.Size(465, 22);
+            this.text_Search.Size = new System.Drawing.Size(512, 22);
             this.text_Search.TabIndex = 13;
             this.text_Search.TextChanged += new System.EventHandler(this.text_Search_TextChanged);
             // 
@@ -269,7 +239,7 @@
             this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator1.Size = new System.Drawing.Size(800, 27);
+            this.bindingNavigator1.Size = new System.Drawing.Size(800, 31);
             this.bindingNavigator1.TabIndex = 14;
             this.bindingNavigator1.Text = "bindingNavigator1";
             // 
@@ -279,13 +249,13 @@
             this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
             this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorAddNewItem.Text = "Add new";
             // 
             // bindingNavigatorCountItem
             // 
             this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
-            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(45, 24);
+            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(45, 28);
             this.bindingNavigatorCountItem.Text = "of {0}";
             this.bindingNavigatorCountItem.ToolTipText = "Total number of items";
             // 
@@ -295,7 +265,7 @@
             this.bindingNavigatorDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorDeleteItem.Image")));
             this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
             this.bindingNavigatorDeleteItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorDeleteItem.Text = "Delete";
             // 
             // bindingNavigatorMoveFirstItem
@@ -304,7 +274,7 @@
             this.bindingNavigatorMoveFirstItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveFirstItem.Image")));
             this.bindingNavigatorMoveFirstItem.Name = "bindingNavigatorMoveFirstItem";
             this.bindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMoveFirstItem.Text = "Move first";
             // 
             // bindingNavigatorMovePreviousItem
@@ -313,13 +283,13 @@
             this.bindingNavigatorMovePreviousItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMovePreviousItem.Image")));
             this.bindingNavigatorMovePreviousItem.Name = "bindingNavigatorMovePreviousItem";
             this.bindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMovePreviousItem.Text = "Move previous";
             // 
             // bindingNavigatorSeparator
             // 
             this.bindingNavigatorSeparator.Name = "bindingNavigatorSeparator";
-            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 27);
+            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 31);
             // 
             // bindingNavigatorPositionItem
             // 
@@ -334,7 +304,7 @@
             // bindingNavigatorSeparator1
             // 
             this.bindingNavigatorSeparator1.Name = "bindingNavigatorSeparator1";
-            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 27);
+            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 31);
             // 
             // bindingNavigatorMoveNextItem
             // 
@@ -342,7 +312,7 @@
             this.bindingNavigatorMoveNextItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveNextItem.Image")));
             this.bindingNavigatorMoveNextItem.Name = "bindingNavigatorMoveNextItem";
             this.bindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMoveNextItem.Text = "Move next";
             // 
             // bindingNavigatorMoveLastItem
@@ -351,24 +321,20 @@
             this.bindingNavigatorMoveLastItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveLastItem.Image")));
             this.bindingNavigatorMoveLastItem.Name = "bindingNavigatorMoveLastItem";
             this.bindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMoveLastItem.Text = "Move last";
             // 
             // bindingNavigatorSeparator2
             // 
             this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator2";
-            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 27);
-            // 
-            // dataLahanTableAdapter
-            // 
-            this.dataLahanTableAdapter.ClearBeforeFill = true;
+            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 31);
             // 
             // btnReset
             // 
             this.btnReset.BackColor = System.Drawing.Color.LawnGreen;
-            this.btnReset.Location = new System.Drawing.Point(607, 278);
+            this.btnReset.Location = new System.Drawing.Point(607, 208);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(100, 27);
+            this.btnReset.Size = new System.Drawing.Size(75, 27);
             this.btnReset.TabIndex = 15;
             this.btnReset.Text = "RESET";
             this.btnReset.UseVisualStyleBackColor = false;
@@ -377,19 +343,90 @@
             // btnInjection
             // 
             this.btnInjection.BackColor = System.Drawing.Color.Red;
-            this.btnInjection.Location = new System.Drawing.Point(607, 323);
+            this.btnInjection.Location = new System.Drawing.Point(688, 208);
             this.btnInjection.Name = "btnInjection";
-            this.btnInjection.Size = new System.Drawing.Size(100, 31);
+            this.btnInjection.Size = new System.Drawing.Size(100, 27);
             this.btnInjection.TabIndex = 16;
             this.btnInjection.Text = "Test Injection";
             this.btnInjection.UseVisualStyleBackColor = false;
             this.btnInjection.Click += new System.EventHandler(this.btnInjection_Click);
+            // 
+            // boxGambar
+            // 
+            this.boxGambar.DataBindings.Add(new System.Windows.Forms.Binding("Image", this.dataLahanBindingSource, "Foto", true));
+            this.boxGambar.Location = new System.Drawing.Point(607, 241);
+            this.boxGambar.Name = "boxGambar";
+            this.boxGambar.Size = new System.Drawing.Size(181, 111);
+            this.boxGambar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.boxGambar.TabIndex = 17;
+            this.boxGambar.TabStop = false;
+            this.boxGambar.Click += new System.EventHandler(this.boxGambar_Click);
+            // 
+            // btn_UploadGambar
+            // 
+            this.btn_UploadGambar.Location = new System.Drawing.Point(607, 358);
+            this.btn_UploadGambar.Name = "btn_UploadGambar";
+            this.btn_UploadGambar.Size = new System.Drawing.Size(181, 23);
+            this.btn_UploadGambar.TabIndex = 18;
+            this.btn_UploadGambar.Text = "Upload Gambar";
+            this.btn_UploadGambar.UseVisualStyleBackColor = true;
+            this.btn_UploadGambar.Click += new System.EventHandler(this.btn_UploadGambar_Click);
+            // 
+            // dataLahanBindingSource
+            // 
+            this.dataLahanBindingSource.DataMember = "DataLahan";
+            this.dataLahanBindingSource.DataSource = this.dB_SMJT_DataLahanSet;
+            // 
+            // dB_SMJT_DataLahanSet
+            // 
+            this.dB_SMJT_DataLahanSet.DataSetName = "DB_SMJT_DataLahanSet";
+            this.dB_SMJT_DataLahanSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // dataLahanTableAdapter
+            // 
+            this.dataLahanTableAdapter.ClearBeforeFill = true;
+            // 
+            // LahanID
+            // 
+            this.LahanID.DataPropertyName = "LahanID";
+            this.LahanID.HeaderText = "LahanID";
+            this.LahanID.MinimumWidth = 6;
+            this.LahanID.Name = "LahanID";
+            this.LahanID.ReadOnly = true;
+            this.LahanID.Width = 125;
+            // 
+            // NamaLahan
+            // 
+            this.NamaLahan.DataPropertyName = "NamaLahan";
+            this.NamaLahan.HeaderText = "NamaLahan";
+            this.NamaLahan.MinimumWidth = 6;
+            this.NamaLahan.Name = "NamaLahan";
+            this.NamaLahan.Width = 125;
+            // 
+            // luas_lahan
+            // 
+            this.luas_lahan.DataPropertyName = "luas_lahan";
+            this.luas_lahan.HeaderText = "luas_lahan";
+            this.luas_lahan.MinimumWidth = 6;
+            this.luas_lahan.Name = "luas_lahan";
+            this.luas_lahan.Width = 125;
+            // 
+            // Foto
+            // 
+            this.Foto.DataPropertyName = "Foto";
+            this.Foto.HeaderText = "Foto";
+            this.Foto.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Stretch;
+            this.Foto.MinimumWidth = 6;
+            this.Foto.Name = "Foto";
+            this.Foto.Width = 125;
             // 
             // FormLahan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btn_UploadGambar);
+            this.Controls.Add(this.boxGambar);
             this.Controls.Add(this.btnInjection);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.bindingNavigator1);
@@ -412,11 +449,12 @@
             this.Text = "FormLahan";
             this.Load += new System.EventHandler(this.FormLahan_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataLahanBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dB_SMJT_DataLahanSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).EndInit();
             this.bindingNavigator1.ResumeLayout(false);
             this.bindingNavigator1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.boxGambar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataLahanBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dB_SMJT_DataLahanSet)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -453,10 +491,13 @@
         private DB_SMJT_DataLahanSet dB_SMJT_DataLahanSet;
         private System.Windows.Forms.BindingSource dataLahanBindingSource;
         private DB_SMJT_DataLahanSetTableAdapters.DataLahanTableAdapter dataLahanTableAdapter;
+        private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.Button btnInjection;
+        private System.Windows.Forms.PictureBox boxGambar;
+        private System.Windows.Forms.Button btn_UploadGambar;
         private System.Windows.Forms.DataGridViewTextBoxColumn LahanID;
         private System.Windows.Forms.DataGridViewTextBoxColumn NamaLahan;
         private System.Windows.Forms.DataGridViewTextBoxColumn luas_lahan;
-        private System.Windows.Forms.Button btnReset;
-        private System.Windows.Forms.Button btnInjection;
+        private System.Windows.Forms.DataGridViewImageColumn Foto;
     }
 }
