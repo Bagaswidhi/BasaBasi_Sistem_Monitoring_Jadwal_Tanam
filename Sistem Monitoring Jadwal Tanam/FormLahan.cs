@@ -114,6 +114,11 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     {
                         conn.Open();
                     }
+                    if (txtLahanID.Text == "")
+                    {
+                        MessageBox.Show("Pilih data yang ingin diubah dari tabel terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
 
                     using (SqlCommand cmd = new SqlCommand("sp_UpdateLahan", conn))
                     {
