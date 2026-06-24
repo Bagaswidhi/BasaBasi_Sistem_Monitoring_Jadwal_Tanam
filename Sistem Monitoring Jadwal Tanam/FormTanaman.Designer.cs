@@ -35,6 +35,9 @@
             this.btn_Update = new System.Windows.Forms.Button();
             this.btn_Delete = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.TanamanID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NamaTanaman = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LamaMasaTanam = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataTanamanBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dB_SMJT_DataTanamanSet = new Sistem_Monitoring_Jadwal_Tanam.DB_SMJT_DataTanamanSet();
             this.label2 = new System.Windows.Forms.Label();
@@ -59,9 +62,6 @@
             this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this.dataTanamanTableAdapter = new Sistem_Monitoring_Jadwal_Tanam.DB_SMJT_DataTanamanSetTableAdapters.DataTanamanTableAdapter();
-            this.TanamanID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NamaTanaman = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LamaMasaTanam = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataTanamanBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dB_SMJT_DataTanamanSet)).BeginInit();
@@ -125,6 +125,31 @@
             this.dataGridView1.Size = new System.Drawing.Size(563, 285);
             this.dataGridView1.TabIndex = 4;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
+            // TanamanID
+            // 
+            this.TanamanID.DataPropertyName = "TanamanID";
+            this.TanamanID.HeaderText = "TanamanID";
+            this.TanamanID.MinimumWidth = 6;
+            this.TanamanID.Name = "TanamanID";
+            this.TanamanID.ReadOnly = true;
+            this.TanamanID.Width = 125;
+            // 
+            // NamaTanaman
+            // 
+            this.NamaTanaman.DataPropertyName = "NamaTanaman";
+            this.NamaTanaman.HeaderText = "NamaTanaman";
+            this.NamaTanaman.MinimumWidth = 6;
+            this.NamaTanaman.Name = "NamaTanaman";
+            this.NamaTanaman.Width = 125;
+            // 
+            // LamaMasaTanam
+            // 
+            this.LamaMasaTanam.DataPropertyName = "LamaMasaTanam";
+            this.LamaMasaTanam.HeaderText = "LamaMasaTanam";
+            this.LamaMasaTanam.MinimumWidth = 6;
+            this.LamaMasaTanam.Name = "LamaMasaTanam";
+            this.LamaMasaTanam.Width = 125;
             // 
             // dataTanamanBindingSource
             // 
@@ -243,7 +268,7 @@
             this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator1.Size = new System.Drawing.Size(800, 31);
+            this.bindingNavigator1.Size = new System.Drawing.Size(800, 27);
             this.bindingNavigator1.TabIndex = 16;
             this.bindingNavigator1.Text = "bindingNavigator1";
             // 
@@ -260,7 +285,7 @@
             this.bindingNavigatorMoveFirstItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveFirstItem.Image")));
             this.bindingNavigatorMoveFirstItem.Name = "bindingNavigatorMoveFirstItem";
             this.bindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(29, 28);
+            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(29, 24);
             this.bindingNavigatorMoveFirstItem.Text = "Move first";
             // 
             // bindingNavigatorMovePreviousItem
@@ -337,31 +362,6 @@
             // 
             this.dataTanamanTableAdapter.ClearBeforeFill = true;
             // 
-            // TanamanID
-            // 
-            this.TanamanID.DataPropertyName = "TanamanID";
-            this.TanamanID.HeaderText = "TanamanID";
-            this.TanamanID.MinimumWidth = 6;
-            this.TanamanID.Name = "TanamanID";
-            this.TanamanID.ReadOnly = true;
-            this.TanamanID.Width = 125;
-            // 
-            // NamaTanaman
-            // 
-            this.NamaTanaman.DataPropertyName = "NamaTanaman";
-            this.NamaTanaman.HeaderText = "NamaTanaman";
-            this.NamaTanaman.MinimumWidth = 6;
-            this.NamaTanaman.Name = "NamaTanaman";
-            this.NamaTanaman.Width = 125;
-            // 
-            // LamaMasaTanam
-            // 
-            this.LamaMasaTanam.DataPropertyName = "LamaMasaTanam";
-            this.LamaMasaTanam.HeaderText = "LamaMasaTanam";
-            this.LamaMasaTanam.MinimumWidth = 6;
-            this.LamaMasaTanam.Name = "LamaMasaTanam";
-            this.LamaMasaTanam.Width = 125;
-            // 
             // FormTanaman
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -382,6 +382,7 @@
             this.Controls.Add(this.btn_Update);
             this.Controls.Add(this.btn_Insert);
             this.Controls.Add(this.btn_Load);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormTanaman";
             this.Text = "FormTanaman";
             this.Load += new System.EventHandler(this.FormTanaman_Load);

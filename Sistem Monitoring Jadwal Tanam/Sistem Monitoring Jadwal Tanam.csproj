@@ -92,6 +92,7 @@
     <Compile Include="FormTanaman.Designer.cs">
       <DependentUpon>FormTanaman.cs</DependentUpon>
     </Compile>
+    <Compile Include="KoneksiDB.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
