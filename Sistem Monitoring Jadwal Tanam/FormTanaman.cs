@@ -268,5 +268,58 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                 }
             }
         }
+
+        private void btnImpDatabase_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DataTable dt = (DataTable)dataGridView1.DataSource;
+
+                if (dt == null || dt.Rows.Count == 0)
+                {
+                    MessageBox.Show("Tidak ada data untuk diimport.");
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
+                {
+                    conn.Open();
+                    int sukses = 0; // Penghitung data yang berhasil masuk
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string namaTanaman = row["NamaTanaman"].ToString().Trim();
+                        string lamaMasaTanam = row["LamaMasaTanam"].ToString().Trim();
+
+                        if (string.IsNullOrEmpty(namaTanaman))
+                            continue;
+
+                        using (SqlCommand cmd = new SqlCommand("sp_InsertTanaman", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+
+                            cmd.Parameters.AddWithValue("@NamaTanaman", namaTanaman);
+                            cmd.Parameters.AddWithValue("@LamaMasaTanam", lamaMasaTanam);
+
+                            cmd.ExecuteNonQuery();
+                            sukses++; // Tambah 1 ke penghitung sukses
+                        }
+                    }
+
+                    MessageBox.Show($"{sukses} data tanaman berhasil diimport ke database!");
+                    dataGridView1.DataSource = dataTanamanBindingSource;
+                    dataGridView1.Enabled = true;
+                    btn_Load.Enabled = true;
+                    btn_Insert.Enabled = true;
+                    btn_Update.Enabled = true;
+                    btn_Delete.Enabled = true;
+                    btn_Load.PerformClick(); 
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error saat import: " + ex.Message);
+            }
+        }
     }
 }
