@@ -14,18 +14,19 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 {
     public partial class Form1: Form
     {
-        private readonly SqlConnection conn;
-        private readonly string connectionString = "Data Source=MSI\\BAGAS;Initial Catalog=DBSistemMonitoringMasaTanam;Integrated Security=True";
+        KoneksiDB conn = new KoneksiDB();
+        //private readonly SqlConnection conn;
+        //private readonly string connectionString = "Data Source=MSI\\BAGAS;Initial Catalog=DBSistemMonitoringMasaTanam;Integrated Security=True";
         public Form1()
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
         }
 
         private void ConnectDatabase()
         {
             try
             {
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 if (conn.State == System.Data.ConnectionState.Closed)
                 {
                     conn.Open();
