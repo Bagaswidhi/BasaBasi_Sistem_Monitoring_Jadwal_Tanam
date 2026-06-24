@@ -13,13 +13,13 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 {
     public partial class FormJadwalTanam : Form
     {
-        private readonly SqlConnection conn;
-        private readonly string connectionString = "Data Source=MSI\\BAGAS;Initial Catalog=DBSistemMonitoringMasaTanam;Integrated Security=True";
+        KoneksiDB conn = new KoneksiDB();
+        //private readonly SqlConnection conn;
+        //private readonly string connectionString = "Data Source=MSI\\BAGAS;Initial Catalog=DBSistemMonitoringMasaTanam;Integrated Security=True";
         private string idJadwalTerpilih = "";
         public FormJadwalTanam()
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
 
             DateTime today = DateTime.Today;
             DateTime firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
@@ -33,44 +33,47 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             try
             {
-                if (conn.State == ConnectionState.Closed) conn.Open();
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
 
-                // ==========================================
-                // 1. MENGISI COMBOBOX TANAMAN (Pakai BindingSource)
-                // ==========================================
-                string queryTanaman = "SELECT * FROM v_Get_CMB_DataTanaman";
-                SqlDataAdapter daTanaman = new SqlDataAdapter(queryTanaman, conn);
-                DataTable dtTanaman = new DataTable();
-                daTanaman.Fill(dtTanaman);
+                    // ==========================================
+                    // 1. MENGISI COMBOBOX TANAMAN (Pakai BindingSource)
+                    // ==========================================
+                    string queryTanaman = "SELECT * FROM v_Get_CMB_DataTanaman";
+                    SqlDataAdapter daTanaman = new SqlDataAdapter(queryTanaman, conn);
+                    DataTable dtTanaman = new DataTable();
+                    daTanaman.Fill(dtTanaman);
 
-                // Buat jembatan BindingSource
-                BindingSource bsTanaman = new BindingSource();
-                bsTanaman.DataSource = dtTanaman; // Masukkan data tabel ke jembatan
+                    // Buat jembatan BindingSource
+                    BindingSource bsTanaman = new BindingSource();
+                    bsTanaman.DataSource = dtTanaman; // Masukkan data tabel ke jembatan
 
-                // Pasangkan jembatan ke ComboBox
-                cmbTanaman.DataSource = bsTanaman;
-                cmbTanaman.DisplayMember = "NamaTanaman";
-                cmbTanaman.ValueMember = "TanamanID";
-                cmbTanaman.SelectedIndex = -1;
+                    // Pasangkan jembatan ke ComboBox
+                    cmbTanaman.DataSource = bsTanaman;
+                    cmbTanaman.DisplayMember = "NamaTanaman";
+                    cmbTanaman.ValueMember = "TanamanID";
+                    cmbTanaman.SelectedIndex = -1;
 
 
-                // ==========================================
-                // 2. MENGISI COMBOBOX LAHAN (Pakai BindingSource)
-                // ==========================================
-                string queryLahan = "SELECT * FROM v_Get_CMB_DataLahan";
-                SqlDataAdapter daLahan = new SqlDataAdapter(queryLahan, conn);
-                DataTable dtLahan = new DataTable();
-                daLahan.Fill(dtLahan);
+                    // ==========================================
+                    // 2. MENGISI COMBOBOX LAHAN (Pakai BindingSource)
+                    // ==========================================
+                    string queryLahan = "SELECT * FROM v_Get_CMB_DataLahan";
+                    SqlDataAdapter daLahan = new SqlDataAdapter(queryLahan, conn);
+                    DataTable dtLahan = new DataTable();
+                    daLahan.Fill(dtLahan);
 
-                // Buat jembatan BindingSource
-                BindingSource bsLahan = new BindingSource();
-                bsLahan.DataSource = dtLahan; // Masukkan data tabel ke jembatan
+                    // Buat jembatan BindingSource
+                    BindingSource bsLahan = new BindingSource();
+                    bsLahan.DataSource = dtLahan; // Masukkan data tabel ke jembatan
 
-                // Pasangkan jembatan ke ComboBox
-                cmbLahan.DataSource = bsLahan;
-                cmbLahan.DisplayMember = "NamaLahan";
-                cmbLahan.ValueMember = "LahanID";
-                cmbLahan.SelectedIndex = -1;
+                    // Pasangkan jembatan ke ComboBox
+                    cmbLahan.DataSource = bsLahan;
+                    cmbLahan.DisplayMember = "NamaLahan";
+                    cmbLahan.ValueMember = "LahanID";
+                    cmbLahan.SelectedIndex = -1;
+                }
             }
             catch (Exception ex)
             {
@@ -119,70 +122,73 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             try
             {
-                // Mengecek Data Tanaman pada tabel DataTanaman
-                if (conn.State == System.Data.ConnectionState.Closed)
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 {
-                    conn.Open();
-                }
-
-                if (cmbTanaman.SelectedValue is null)
-                {
-                    MessageBox.Show("Nama Tanaman tidak boleh kosong.");
-                    cmbTanaman.Focus();
-                    return;
-                }
-
-                if(cmbLahan.SelectedValue is null)
-                {
-                    MessageBox.Show("Nama lahan tidak boleh kosong.");
-                    cmbLahan.Focus();
-                    return;
-                }
-                object result = null;
-
-                using (SqlCommand cmdCheck = new SqlCommand("sp_Get_LamaMasaTanam", conn))
-                {
-                    cmdCheck.CommandType = CommandType.StoredProcedure;
-                    cmdCheck.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
-                    result = cmdCheck.ExecuteScalar();
-                }
-                
-                if (result == null)
-                {
-                    MessageBox.Show("Tanaman dengan ID tersebut tidak ditemukan.");
-                    return;
-                }
-
-                // Jika tanaman ditemukan, lanjutkan dengan kalkulasi estimasi panen
-                DateTime tanggalTanam = dtpTanggalTanam.Value.Date;
-
-                // Hitung Estimasi
-                int masaTanamHari = Convert.ToInt32(result);
-                DateTime estimasiPanen = tanggalTanam.AddDays(masaTanamHari);
-                txtEstimasiPanen.Text = estimasiPanen.ToString("yyyy-MM-dd");
-
-
-                using (SqlCommand cmdSimpan = new SqlCommand("sp_InsertJadwal", conn))
-                {
-                    cmdSimpan.CommandType = CommandType.StoredProcedure;
-
-                    // Masukkan 4 parameter yang diminta SP
-                    cmdSimpan.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
-                    cmdSimpan.Parameters.AddWithValue("@LahanID", cmbLahan.SelectedValue);
-                    cmdSimpan.Parameters.AddWithValue("@TanggalTanam", tanggalTanam);
-                    cmdSimpan.Parameters.AddWithValue("@EstimasiPanen", estimasiPanen);
-
-                    int resultSimpan = cmdSimpan.ExecuteNonQuery();
-
-                    if (resultSimpan < 0)
+                    // Mengecek Data Tanaman pada tabel DataTanaman
+                    if (conn.State == System.Data.ConnectionState.Closed)
                     {
-                        MessageBox.Show("Jadwal tanam berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        conn.Open();
+                    }
 
-                        btn_Load.PerformClick();
-                        cmbTanaman.SelectedIndex = -1;
-                        cmbLahan.SelectedIndex = -1;
-                        txtEstimasiPanen.Clear();
-                        dtpTanggalTanam.Value = DateTime.Today;
+                    if (cmbTanaman.SelectedValue is null)
+                    {
+                        MessageBox.Show("Nama Tanaman tidak boleh kosong.");
+                        cmbTanaman.Focus();
+                        return;
+                    }
+
+                    if (cmbLahan.SelectedValue is null)
+                    {
+                        MessageBox.Show("Nama lahan tidak boleh kosong.");
+                        cmbLahan.Focus();
+                        return;
+                    }
+                    object result = null;
+
+                    using (SqlCommand cmdCheck = new SqlCommand("sp_Get_LamaMasaTanam", conn))
+                    {
+                        cmdCheck.CommandType = CommandType.StoredProcedure;
+                        cmdCheck.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
+                        result = cmdCheck.ExecuteScalar();
+                    }
+
+                    if (result == null)
+                    {
+                        MessageBox.Show("Tanaman dengan ID tersebut tidak ditemukan.");
+                        return;
+                    }
+
+                    // Jika tanaman ditemukan, lanjutkan dengan kalkulasi estimasi panen
+                    DateTime tanggalTanam = dtpTanggalTanam.Value.Date;
+
+                    // Hitung Estimasi
+                    int masaTanamHari = Convert.ToInt32(result);
+                    DateTime estimasiPanen = tanggalTanam.AddDays(masaTanamHari);
+                    txtEstimasiPanen.Text = estimasiPanen.ToString("yyyy-MM-dd");
+
+
+                    using (SqlCommand cmdSimpan = new SqlCommand("sp_InsertJadwal", conn))
+                    {
+                        cmdSimpan.CommandType = CommandType.StoredProcedure;
+
+                        // Masukkan 4 parameter yang diminta SP
+                        cmdSimpan.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
+                        cmdSimpan.Parameters.AddWithValue("@LahanID", cmbLahan.SelectedValue);
+                        cmdSimpan.Parameters.AddWithValue("@TanggalTanam", tanggalTanam);
+                        cmdSimpan.Parameters.AddWithValue("@EstimasiPanen", estimasiPanen);
+
+                        int resultSimpan = cmdSimpan.ExecuteNonQuery();
+
+                        if (resultSimpan < 0)
+                        {
+                            MessageBox.Show("Jadwal tanam berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            btn_Load.PerformClick();
+                            cmbTanaman.SelectedIndex = -1;
+                            cmbLahan.SelectedIndex = -1;
+                            txtEstimasiPanen.Clear();
+                            dtpTanggalTanam.Value = DateTime.Today;
+                        }
                     }
                 }
             }
@@ -196,57 +202,60 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 {
-                    conn.Open();
-                }
-                object result = null;
-                int jadwalIDTerpilih = Convert.ToInt32(dataGridView1.CurrentRow.Cells["JadwalID"].Value);
-
-                using (SqlCommand cmdCheck = new SqlCommand("sp_Get_LamaMasaTanam", conn))
-                {
-                    cmdCheck.CommandType = CommandType.StoredProcedure;
-                    cmdCheck.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
-                    result = cmdCheck.ExecuteScalar();
-                }
-
-                if (result == null)
-                {
-                    MessageBox.Show("Tanaman dengan ID tersebut tidak ditemukan.");
-                    return;
-                }
-
-                DateTime tanggalTanam = dtpTanggalTanam.Value.Date;
-                int masaTanamHari = Convert.ToInt32(result);
-                DateTime estimasiPanen = tanggalTanam.AddDays(masaTanamHari);
-
-                txtEstimasiPanen.Text = estimasiPanen.ToString("yyyy-MM-dd");
-
-                using (SqlCommand cmdUpdate = new SqlCommand("sp_UpdateJadwal", conn))
-                {
-                    cmdUpdate.CommandType = CommandType.StoredProcedure;
-
-                    cmdUpdate.Parameters.AddWithValue("@JadwalID", jadwalIDTerpilih);
-                    cmdUpdate.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
-                    cmdUpdate.Parameters.AddWithValue("@LahanID", cmbLahan.SelectedValue);
-                    cmdUpdate.Parameters.AddWithValue("@TanggalTanam", tanggalTanam);
-                    cmdUpdate.Parameters.AddWithValue("@EstimasiPanen", estimasiPanen);
-
-                    int resultUpdate = cmdUpdate.ExecuteNonQuery();
-
-                    if (resultUpdate < 0)
+                    if (conn.State == System.Data.ConnectionState.Closed)
                     {
-                        MessageBox.Show("Jadwal tanam berhasil diperbarui!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        conn.Open();
+                    }
+                    object result = null;
+                    int jadwalIDTerpilih = Convert.ToInt32(dataGridView1.CurrentRow.Cells["JadwalID"].Value);
 
-                        // Bersihkan variabel dan layar setelah sukses
-                        idJadwalTerpilih = "";
-                        cmbTanaman.SelectedIndex = -1;
-                        cmbLahan.SelectedIndex = -1;
-                        txtEstimasiPanen.Clear();
-                        dtpTanggalTanam.Value = DateTime.Today;
+                    using (SqlCommand cmdCheck = new SqlCommand("sp_Get_LamaMasaTanam", conn))
+                    {
+                        cmdCheck.CommandType = CommandType.StoredProcedure;
+                        cmdCheck.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
+                        result = cmdCheck.ExecuteScalar();
+                    }
 
-                        // Refresh tabel
-                        btn_Load.PerformClick();
+                    if (result == null)
+                    {
+                        MessageBox.Show("Tanaman dengan ID tersebut tidak ditemukan.");
+                        return;
+                    }
+
+                    DateTime tanggalTanam = dtpTanggalTanam.Value.Date;
+                    int masaTanamHari = Convert.ToInt32(result);
+                    DateTime estimasiPanen = tanggalTanam.AddDays(masaTanamHari);
+
+                    txtEstimasiPanen.Text = estimasiPanen.ToString("yyyy-MM-dd");
+
+                    using (SqlCommand cmdUpdate = new SqlCommand("sp_UpdateJadwal", conn))
+                    {
+                        cmdUpdate.CommandType = CommandType.StoredProcedure;
+
+                        cmdUpdate.Parameters.AddWithValue("@JadwalID", jadwalIDTerpilih);
+                        cmdUpdate.Parameters.AddWithValue("@TanamanID", cmbTanaman.SelectedValue);
+                        cmdUpdate.Parameters.AddWithValue("@LahanID", cmbLahan.SelectedValue);
+                        cmdUpdate.Parameters.AddWithValue("@TanggalTanam", tanggalTanam);
+                        cmdUpdate.Parameters.AddWithValue("@EstimasiPanen", estimasiPanen);
+
+                        int resultUpdate = cmdUpdate.ExecuteNonQuery();
+
+                        if (resultUpdate < 0)
+                        {
+                            MessageBox.Show("Jadwal tanam berhasil diperbarui!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // Bersihkan variabel dan layar setelah sukses
+                            idJadwalTerpilih = "";
+                            cmbTanaman.SelectedIndex = -1;
+                            cmbLahan.SelectedIndex = -1;
+                            txtEstimasiPanen.Clear();
+                            dtpTanggalTanam.Value = DateTime.Today;
+
+                            // Refresh tabel
+                            btn_Load.PerformClick();
+                        }
                     }
                 }
             }
@@ -262,31 +271,34 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             {
                 try
                 {
-                    if (conn.State == System.Data.ConnectionState.Closed)
+                    using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                     {
-                        conn.Open();
-                    }
-                    int jadwalIDTerpilih = Convert.ToInt32(dataGridView1.CurrentRow.Cells["JadwalID"].Value);
-                    using (SqlCommand cmdDelete = new SqlCommand("sp_DeleteJadwal", conn))
-                    {
-                        cmdDelete.CommandType = CommandType.StoredProcedure;
-
-                        // Masukkan parameter ID jadwal yang akan dihapus
-                        cmdDelete.Parameters.AddWithValue("@JadwalID", jadwalIDTerpilih);
-
-                        int result = cmdDelete.ExecuteNonQuery();
-
-                        if (result < 0)
+                        if (conn.State == System.Data.ConnectionState.Closed)
                         {
-                            MessageBox.Show("Jadwal tanam berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            conn.Open();
+                        }
+                        int jadwalIDTerpilih = Convert.ToInt32(dataGridView1.CurrentRow.Cells["JadwalID"].Value);
+                        using (SqlCommand cmdDelete = new SqlCommand("sp_DeleteJadwal", conn))
+                        {
+                            cmdDelete.CommandType = CommandType.StoredProcedure;
 
-                            idJadwalTerpilih = "";
-                            cmbTanaman.SelectedIndex = -1;
-                            cmbLahan.SelectedIndex = -1;
-                            txtEstimasiPanen.Clear();
-                            dtpTanggalTanam.Value = DateTime.Today;
+                            // Masukkan parameter ID jadwal yang akan dihapus
+                            cmdDelete.Parameters.AddWithValue("@JadwalID", jadwalIDTerpilih);
 
-                            btn_Load.PerformClick();
+                            int result = cmdDelete.ExecuteNonQuery();
+
+                            if (result < 0)
+                            {
+                                MessageBox.Show("Jadwal tanam berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                                idJadwalTerpilih = "";
+                                cmbTanaman.SelectedIndex = -1;
+                                cmbLahan.SelectedIndex = -1;
+                                txtEstimasiPanen.Clear();
+                                dtpTanggalTanam.Value = DateTime.Today;
+
+                                btn_Load.PerformClick();
+                            }
                         }
                     }
                 }
@@ -301,24 +313,27 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 {
-                    conn.Open();
+                    if (conn.State == System.Data.ConnectionState.Closed)
+                    {
+                        conn.Open();
+
+                        string query = "SELECT * FROM v_GetJadwal";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+
+                        // Menggunakan SqlDataAdapter untuk menarik data sekaligus
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+
+                        // Masukkan semua data dari database ke dalam DataTable
+                        adapter.Fill(dt);
+
+                        // Berikan data tersebut ke BindingSource.
+                        // DataGridView otomatis akan terisi dan ter-refresh!
+                        jadwalTanamBindingSource.DataSource = dt;
+                    }
                 }
-
-                string query = "SELECT * FROM v_GetJadwal";
-                SqlCommand cmd = new SqlCommand(query, conn);
-        
-                // Menggunakan SqlDataAdapter untuk menarik data sekaligus
-                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-
-                // Masukkan semua data dari database ke dalam DataTable
-                adapter.Fill(dt);
-
-                // Berikan data tersebut ke BindingSource.
-                // DataGridView otomatis akan terisi dan ter-refresh!
-                jadwalTanamBindingSource.DataSource = dt;
             }
             catch (Exception ex)
             {
