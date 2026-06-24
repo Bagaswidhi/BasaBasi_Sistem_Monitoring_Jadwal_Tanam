@@ -13,46 +13,57 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 {
     public partial class FormLahan: Form
     {
-        private readonly SqlConnection conn;
-        private readonly string connectionString = "Data Source=MSI\\BAGAS;Initial Catalog=DBSistemMonitoringMasaTanam;Integrated Security=True";
+        KoneksiDB conn = new KoneksiDB();
+        //private readonly SqlConnection conn;
+        //private readonly string connectionString = "Data Source=MSI\\BAGAS;Initial Catalog=DBSistemMonitoringMasaTanam;Integrated Security=True";
         public FormLahan()
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
-        }
-        private void btn_Insert_Click(object sender, EventArgs e)
-        {
-            try
+            using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
                 {
                     conn.Open();
                 }
-
-                if (txtNamaLahan.Text == "")
+            }
+        }
+        private void btn_Insert_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 {
-                    MessageBox.Show("Nama Lahan tidak boleh kosong.");
-                    txtNamaLahan.Focus();
-                    return;
-                }
-
-                if (txtLuasLahan.Text == "")
-                {
-                    MessageBox.Show("Luas Lahan tidak boleh kosong.");
-                    txtLuasLahan.Focus();
-                    return;
-                }
-                 using (SqlCommand cmd = new SqlCommand("sp_InsertLahan", conn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@NamaLahan", txtNamaLahan.Text);
-                    cmd.Parameters.AddWithValue("@luas_lahan", txtLuasLahan.Text);
-                    int result = cmd.ExecuteNonQuery();
-                    if (result < 0 )
+                    if (conn.State == System.Data.ConnectionState.Closed)
                     {
-                        MessageBox.Show("Data tanaman berhasil ditambahkan.");
-                        btn_Load.PerformClick();
+                        conn.Open();
                     }
+
+                    if (txtNamaLahan.Text == "")
+                    {
+                        MessageBox.Show("Nama Lahan tidak boleh kosong.");
+                        txtNamaLahan.Focus();
+                        return;
+                    }
+
+                    if (txtLuasLahan.Text == "")
+                    {
+                        MessageBox.Show("Luas Lahan tidak boleh kosong.");
+                        txtLuasLahan.Focus();
+                        return;
+                    }
+                    using (SqlCommand cmd = new SqlCommand("sp_InsertLahan", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@NamaLahan", txtNamaLahan.Text);
+                        cmd.Parameters.AddWithValue("@luas_lahan", txtLuasLahan.Text);
+                        int result = cmd.ExecuteNonQuery();
+                        if (result < 0 )
+                        {
+                            MessageBox.Show("Data tanaman berhasil ditambahkan.");
+                            btn_Load.PerformClick();
+                        }
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -65,24 +76,27 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 {
-                    conn.Open();
+                    if (conn.State == System.Data.ConnectionState.Closed)
+                    {
+                        conn.Open();
+                    }
+
+                    string query = "SELECT * FROM v_GetLahan";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Menggunakan SqlDataAdapter untuk menarik data sekaligus
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+
+                    // Masukkan semua data dari database ke dalam DataTable
+                    adapter.Fill(dt);
+
+                    // Berikan data tersebut ke BindingSource.
+                    // DataGridView otomatis akan terisi dan ter-refresh!
+                    dataLahanBindingSource.DataSource = dt;
                 }
-
-                string query = "SELECT * FROM v_GetLahan";
-                SqlCommand cmd = new SqlCommand(query, conn);
-
-                // Menggunakan SqlDataAdapter untuk menarik data sekaligus
-                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-
-                // Masukkan semua data dari database ke dalam DataTable
-                adapter.Fill(dt);
-
-                // Berikan data tersebut ke BindingSource.
-                // DataGridView otomatis akan terisi dan ter-refresh!
-                dataLahanBindingSource.DataSource = dt;
             }
             catch (Exception ex)
             {
@@ -94,27 +108,31 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 {
-                    conn.Open();
-                }
-
-                using (SqlCommand cmd = new SqlCommand("sp_UpdateLahan", conn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@LahanID", Convert.ToInt32(txtLahanID.Text));
-                    cmd.Parameters.AddWithValue("@NamaLahan", txtNamaLahan.Text);
-                    cmd.Parameters.AddWithValue("@luas_lahan", txtLuasLahan.Text);
-
-                    int result = cmd.ExecuteNonQuery();
-
-                    if (result < 0)
+                    if (conn.State == System.Data.ConnectionState.Closed)
                     {
-                        MessageBox.Show("Data tanaman berhasil diubah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        btn_Load.PerformClick();
+                        conn.Open();
+                    }
+
+                    using (SqlCommand cmd = new SqlCommand("sp_UpdateLahan", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@LahanID", Convert.ToInt32(txtLahanID.Text));
+                        cmd.Parameters.AddWithValue("@NamaLahan", txtNamaLahan.Text);
+                        cmd.Parameters.AddWithValue("@luas_lahan", txtLuasLahan.Text);
+
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result < 0)
+                        {
+                            MessageBox.Show("Data tanaman berhasil diubah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            btn_Load.PerformClick();
+                        }
                     }
                 }
+                
             }
             catch (Exception ex)
             {
@@ -126,30 +144,33 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 {
-                    conn.Open();
-                }
-                DialogResult resultConfirm = MessageBox.Show(
-                    "Yakin mau ngehapus data ini?",
-                    "Konfirmasi Hapus",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning);
-                if (resultConfirm == DialogResult.Yes)
-                {
-                    using (SqlCommand cmd = new SqlCommand("sp_DeleteLahan", conn))
+                    if (conn.State == System.Data.ConnectionState.Closed)
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-
-                        cmd.Parameters.AddWithValue("@LahanID", Convert.ToInt32(txtLahanID.Text));
-
-                        int result = cmd.ExecuteNonQuery();
-
-                        if (result < 0)
+                        conn.Open();
+                    }
+                    DialogResult resultConfirm = MessageBox.Show(
+                        "Yakin mau ngehapus data ini?",
+                        "Konfirmasi Hapus",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning);
+                    if (resultConfirm == DialogResult.Yes)
+                    {
+                        using (SqlCommand cmd = new SqlCommand("sp_DeleteLahan", conn))
                         {
-                            MessageBox.Show("Data LahanID berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            cmd.CommandType = CommandType.StoredProcedure;
 
-                            btn_Load.PerformClick();
+                            cmd.Parameters.AddWithValue("@LahanID", Convert.ToInt32(txtLahanID.Text));
+
+                            int result = cmd.ExecuteNonQuery();
+
+                            if (result < 0)
+                            {
+                                MessageBox.Show("Data LahanID berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                                btn_Load.PerformClick();
+                            }
                         }
                     }
                 }
@@ -215,16 +236,20 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             try
             {
-                if (conn.State == ConnectionState.Closed) 
-                    conn.Open();
-
-                using (SqlCommand cmd = new SqlCommand("sp_ResetInjection", conn))
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.ExecuteNonQuery();
+                    if (conn.State == ConnectionState.Closed)
+                        conn.Open();
 
-                    MessageBox.Show("Data berhasil di reset bos!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    btn_Load.PerformClick();
+                    using (SqlCommand cmd = new SqlCommand("sp_ResetInjection", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Data berhasil di reset bos!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        btn_Load.PerformClick();
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -237,23 +262,26 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
+                using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
                 {
-                    conn.Open();
-                }
-
-                using (SqlCommand cmd = new SqlCommand("sp_Injection", conn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@LuasLahan", txtLuasLahan.Text);
-                    cmd.Parameters.AddWithValue("@LahanID", txtLahanID.Text);
-
-                    int result = cmd.ExecuteNonQuery();
-                    btn_Load.PerformClick();
-                    if (result < 0)
+                    if (conn.State == System.Data.ConnectionState.Closed)
                     {
-                        MessageBox.Show("baris terupdate", "Hasil Eksekusi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        conn.Open();
+                    }
+
+                    using (SqlCommand cmd = new SqlCommand("sp_Injection", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@LuasLahan", txtLuasLahan.Text);
+                        cmd.Parameters.AddWithValue("@LahanID", txtLahanID.Text);
+
+                        int result = cmd.ExecuteNonQuery();
+                        btn_Load.PerformClick();
+                        if (result < 0)
+                        {
+                            MessageBox.Show("baris terupdate", "Hasil Eksekusi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
                     }
                 }
             }
