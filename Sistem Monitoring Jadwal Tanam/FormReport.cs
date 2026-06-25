@@ -51,9 +51,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
             chartTanaman.Titles.Clear();
             chartTanaman.Legends.Clear();
             chartTanaman.ChartAreas.Clear();
-
-            Title title = new Title("Laporan Jadwal Tanam 2021 - 2026", Docking.Top, new Font("Arial", 14, FontStyle.Bold), Color.DarkBlue);
-            chartTanaman.Titles.Add(title);
+            string teksJudul = "";
 
             Legend legend = new Legend("MainLegend");
             legend.Docking = Docking.Right; 
@@ -103,6 +101,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 
                     if (tahun == 0)
                     {
+                        teksJudul = "Laporan Jadwal Tanam 2021 - 2026";
                         ca.AxisX.Title = "Tahun";
 
                         cmd.CommandText = "sp_REPORT";
@@ -116,6 +115,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                     }
                     else
                     {
+                        teksJudul = "Laporan Jadwal Tanam Tahun " + tahun.ToString();
                         ca.AxisX.Title = "Bulan";
 
                         cmd.CommandText = "sp_DashboardPerTahun";
@@ -136,6 +136,9 @@ namespace Sistem_Monitoring_Jadwal_Tanam
                             chartTanaman.ChartAreas[0].AxisX.CustomLabels.Add(i - 0.5, i + 0.5, namaBulan[i - 1]);
                         }
                     }
+
+                    Title judulChart = new Title(teksJudul, Docking.Top, new Font("Arial", 14, FontStyle.Bold), Color.DarkBlue);
+                    chartTanaman.Titles.Add(judulChart);
 
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
