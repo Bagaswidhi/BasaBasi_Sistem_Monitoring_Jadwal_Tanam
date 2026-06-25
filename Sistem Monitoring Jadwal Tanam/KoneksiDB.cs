@@ -14,29 +14,8 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 
         public static string GetConnectionString()
         {
-            string connectionString = $"Data Source={GetLocalIpAddress()}\\BAGAS;Initial Catalog=DBSistemMonitoringMasaTanam;User ID=sa;Password=bagas3005;";
+            string connectionString = "Data Source=192.168.1.113\\BAGAS;Initial Catalog=DBSistemMonitoringMasaTanam;User ID=sa;Password=bagas3005;";
             return connectionString;
-        }
-        public static string GetLocalIpAddress()
-        {
-            string localIP = string.Empty;
-            try
-            {
-                var host = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
-                foreach (var ip in host.AddressList)
-                {
-                    if(ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                    {
-                        localIP = ip.ToString();
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error getting local IP address: " + ex.Message);
-            }
-            return localIP;
         }
     }
 }
