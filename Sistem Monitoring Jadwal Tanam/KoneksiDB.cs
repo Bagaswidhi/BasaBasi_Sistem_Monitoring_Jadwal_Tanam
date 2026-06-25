@@ -14,7 +14,7 @@ namespace Sistem_Monitoring_Jadwal_Tanam
 
         public static string GetConnectionString()
         {
-            string connectionString = $"Data Source={GetLocalIpAddress()};Initial Catalog=DBSistemMonitoringMasaTanam;User ID =sa; Password=bagas3005;";
+            string connectionString = $"Data Source={GetLocalIpAddress()}\\BAGAS;Initial Catalog=DBSistemMonitoringMasaTanam;User ID=sa;Password=bagas3005;";
             return connectionString;
         }
         public static string GetLocalIpAddress()

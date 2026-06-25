@@ -20,13 +20,6 @@ namespace Sistem_Monitoring_Jadwal_Tanam
         public FormLahan()
         {
             InitializeComponent();
-            using (SqlConnection conn = new SqlConnection(KoneksiDB.GetConnectionString()))
-            {
-                if (conn.State == System.Data.ConnectionState.Closed)
-                {
-                    conn.Open();
-                }
-            }
         }
         private void btn_Insert_Click(object sender, EventArgs e)
         {
