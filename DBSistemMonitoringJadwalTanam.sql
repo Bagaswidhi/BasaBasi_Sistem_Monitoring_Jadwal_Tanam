@@ -13,6 +13,11 @@ CREATE TABLE DataLahan(
 	luas_lahan FLOAT NOT NULL
 );
 
+ALTER TABLE DataLahan
+    ADD Foto VARBINARY(MAX);
+
+SELECT * FROM DataLahan
+
 CREATE TABLE JadwalTanam(
 	JadwalID INT IDENTITY(1,1) PRIMARY KEY,
 	TanamanID INT NOT NULL,
@@ -37,6 +42,7 @@ ALTER TABLE DataLahan ADD CONSTRAINT CHK_luaslahan CHECK(luas_lahan > 0);
 ALTER TABLE JadwalTanam ADD CONSTRAINT CHK_TanggalTanam CHECK(TanggalTanam <= GETDATE())
 
 DROP TABLE JadwalTanam
+ALTER TABLE JadwalTanam DROP CONSTRAINT CHK_TanggalTanam
 
 SELECT * FROM DataLahan
 SELECT * FROM DataTanaman
@@ -115,18 +121,13 @@ BEGIN
     VALUES (@NamaTanaman, @LamaMasaTanam);
 END
 
-ALTER PROCEDURE sp_UpdateTanaman
+ALTER OR CREATE PROCEDURE sp_UpdateTanaman
     @TanamanID INT,
     @NamaTanaman VARCHAR(50),
     @LamaMasaTanam INT
 AS
 BEGIN
     SET NOCOUNT ON;
-
-    IF NOT EXISTS (SELECT 1 FROM DataTanaman WHERE TanamanID = @TanamanID)
-    BEGIN
-        THROW 51000, 'Data tanaman tidak ditemukan atau sudah dihapus!', 1;
-    END
 
     IF @NamaTanaman IS NULL 
     BEGIN
@@ -153,7 +154,6 @@ BEGIN
         THROW 51000, 'Lama masa tanam harus terisi', 1;
     END
 
-    -- TAHAP 1: EKSEKUSI UPDATE KE TABEL PARENT (MASTER TANAMAN)
     UPDATE DataTanaman
     SET 
         NamaTanaman = @NamaTanaman,
@@ -198,14 +198,16 @@ END
   SELECT
     LahanID AS LahanID,
     NamaLahan AS NamaLahan,
-    luas_lahan AS luas_lahan
+    luas_lahan AS luas_lahan,
+    Foto AS Foto
   FROM DataLahan
 
 
 
 ALTER PROCEDURE sp_InsertLahan
     @NamaLahan VARCHAR(50),
-    @luas_lahan FLOAT
+    @luas_lahan FLOAT,
+    @Foto VARBINARY(MAX)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -235,8 +237,8 @@ BEGIN
         THROW 51000, 'Luas lahan harus berupa angka',1;
     END
 
-    INSERT INTO DataLahan(NamaLahan, luas_lahan)
-    VALUES (@NamaLahan, @luas_lahan);
+    INSERT INTO DataLahan(NamaLahan, luas_lahan, Foto)
+    VALUES (@NamaLahan, @luas_lahan,@Foto);
 END
 
 
@@ -244,7 +246,8 @@ END
 ALTER PROCEDURE sp_UpdateLahan
     @LahanID INT,
     @NamaLahan VARCHAR(50),
-    @luas_lahan INT
+    @luas_lahan INT,
+    @Foto VARBINARY(MAX)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -282,7 +285,8 @@ BEGIN
     UPDATE DataLahan
     SET 
         NamaLahan = @NamaLahan,
-        luas_lahan = @luas_lahan
+        luas_lahan = @luas_lahan,
+        Foto = @Foto
     WHERE 
         LahanID = @LahanID;
 END
@@ -421,7 +425,31 @@ BEGIN
     VALUES (@TanamanID, @LahanID, @TanggalTanam, @EstimasiPanen);
 END
 
-CREATE PROCEDURE sp_UpdateJadwal
+DROP PROCEDURE sp_InsertJadwal
+
+CREATE OR ALTER PROCEDURE sp_InsertJadwal
+    @TanamanID INT,
+    @LahanID INT,
+    @TanggalTanam DATE,
+    @EstimasiPanen DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    declare @totalL int;
+	select @totalL = count(lahanID) from JadwalTanam where LahanID = @LahanID and EstimasiPanen > @TanggalTanam
+
+	if(@totalL = 2)
+	begin
+		THROW 51000, 'Gagal Menambahkan jadwal, lahan sudah terpakai untuk 2 tanaman atau penuh', 1;
+	end
+
+    -- 3. Eksekusi Simpan
+    INSERT INTO JadwalTanam (TanamanID, LahanID, TanggalTanam, EstimasiPanen)
+    VALUES (@TanamanID, @LahanID, @TanggalTanam, @EstimasiPanen);
+END
+
+CREATE OR ALTER PROCEDURE sp_UpdateJadwal
     @JadwalID INT,
     @TanamanID INT,
     @LahanID INT,
@@ -449,7 +477,22 @@ BEGIN
         THROW 51000, 'Tanggal tanam tidak logis!', 1;
     END
 
-    -- 4. Eksekusi Update
+    -- 4. Validasi Kapasitas Lahan (Adaptasi dari sp_InsertJadwal)
+    DECLARE @totalL INT;
+    
+    -- Hitung jadwal aktif di lahan tersebut, KECUALI jadwal yang sedang diupdate
+    SELECT @totalL = COUNT(LahanID) 
+    FROM JadwalTanam 
+    WHERE LahanID = @LahanID 
+      AND EstimasiPanen > @TanggalTanam
+      AND JadwalID <> @JadwalID; 
+
+    IF (@totalL >= 2) -- Menggunakan >= 2 agar lebih aman dari bug data
+    BEGIN
+        THROW 51000, 'Gagal Mengubah jadwal, lahan sudah terpakai untuk 2 tanaman atau penuh', 1;
+    END
+
+    -- 5. Eksekusi Update
     UPDATE JadwalTanam
     SET 
         TanamanID = @TanamanID,
@@ -482,3 +525,223 @@ DROP TABLE Report
 SELECT * INTO DataLahan_Backup FROM DataLahan;
 SELECT * FROM DataLahan_Backup
 SELECT * FROM DataLahan
+
+
+
+CREATE TABLE LOGAKTIVITAS
+(
+	ID_LOG INT IDENTITY(1,1),
+	AKTIVITAS VARCHAR(100),
+    DATA VARCHAR(100),
+	WAKTU DATETIME
+);
+
+ALTER TABLE LOGAKTIVITAS
+ALTER COLUMN DATA VARCHAR(MAX);
+
+SELECT * FROM LOGAKTIVITAS
+
+CREATE OR ALTER TRIGGER TRG_InsertTanaman
+ON DataTanaman
+AFTER INSERT
+AS
+BEGIN
+	INSERT INTO LOGAKTIVITAS (AKTIVITAS, DATA, WAKTU)
+    SELECT  'INSERT DATA TANAMAN', 
+            'TanamanID ' + CAST(TanamanID AS VARCHAR) + ', NamaTanaman: ' + NamaTanaman, 
+            GETDATE()
+    FROM inserted
+END;    
+
+CREATE OR ALTER TRIGGER TRG_DeleteTanaman
+ON DataTanaman
+AFTER DELETE
+AS
+BEGIN
+    INSERT INTO LOGAKTIVITAS (AKTIVITAS, DATA, WAKTU)
+    SELECT  'HAPUS DATA TANAMAN', 
+            'TanamanID ' + CAST(TanamanID AS VARCHAR) + ', NamaTanaman: ' + NamaTanaman, 
+             GETDATE()
+    FROM deleted
+END;
+
+CREATE OR ALTER TRIGGER TRG_UpdateDataTanaman
+ON DataTanaman
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO LOGAKTIVITAS (AKTIVITAS, DATA, WAKTU)
+    SELECT 
+        'UPDATE DATA TANAMAN',
+        
+        'TanamanID ' + CAST(i.TanamanID AS VARCHAR) + ' Diubah: ' +
+        
+            -- Cek apakah Nama Tanaman berubah
+            CASE 
+                WHEN i.NamaTanaman <> d.NamaTanaman 
+                THEN '[Nama: ' + d.NamaTanaman + ' -> ' + i.NamaTanaman + '] ' 
+                ELSE '' 
+            END +
+        
+            -- Cek apakah Lama Masa Tanam berubah
+            CASE 
+                WHEN i.LamaMasaTanam <> d.LamaMasaTanam 
+                THEN '[Lama Masa Tanam: ' + CAST(d.LamaMasaTanam AS VARCHAR) + ' -> ' + CAST(i.LamaMasaTanam AS VARCHAR) + ']' 
+                ELSE '' 
+            END,
+        GETDATE()
+        
+    FROM inserted i
+    INNER JOIN deleted d ON i.TanamanID = d.TanamanID
+END;
+
+
+CREATE OR ALTER TRIGGER TRG_InsertLahan
+ON DataLahan
+AFTER INSERT
+AS
+BEGIN
+	INSERT INTO LOGAKTIVITAS (AKTIVITAS, DATA, WAKTU)
+    SELECT  'INSERT DATA LAHAN', 
+            'TanamanID ' + CAST(LahanID AS VARCHAR) + ', NamaLahan: ' + NamaLahan, 
+            GETDATE()
+    FROM inserted
+END;
+
+CREATE OR ALTER TRIGGER TRG_DeleteLahan
+ON DataLahan
+AFTER DELETE
+AS
+BEGIN
+    INSERT INTO LOGAKTIVITAS (AKTIVITAS, DATA, WAKTU)
+    SELECT  'HAPUS DATA LAHAN', 
+            'TanamanID ' + CAST(LahanID AS VARCHAR) + ', NamaLahan: ' + NamaLahan, 
+             GETDATE()
+    FROM deleted
+END;
+
+SELECT * FROM DataLahan
+
+CREATE OR ALTER TRIGGER TRG_UpdateDataLahan
+ON DataLahan
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO LOGAKTIVITAS (AKTIVITAS, DATA, WAKTU)
+    SELECT 
+        'UPDATE DATA LAHAN',
+        
+        'LahanID ' + CAST(i.LahanID AS VARCHAR) + ' Diubah: ' +
+        
+            -- Cek apakah Nama Lahan berubah
+            CASE 
+                WHEN i.NamaLahan <> d.NamaLahan
+                THEN '[Nama: ' + d.NamaLahan + ' -> ' + i.NamaLahan + '] ' 
+                ELSE '' 
+            END +
+        
+            -- Cek apakah Lama Masa Tanam berubah
+            CASE 
+                WHEN i.luas_lahan <> d.luas_lahan
+                THEN '[Luas Lahan: ' + CAST(d.luas_lahan AS VARCHAR) + ' -> ' + CAST(i.luas_lahan AS VARCHAR) + ']' 
+                ELSE '' 
+            END +
+
+            CASE
+                WHEN i.Foto <> d.Foto
+                THEN '[Foto Lahan Diubah]'
+                ELSE ''
+            END,
+        GETDATE()
+        
+    FROM inserted i
+    INNER JOIN deleted d ON i.LahanID = d.LahanID
+
+END;
+
+CREATE OR ALTER TRIGGER TRG_InsertJadwal
+ON JadwalTanam
+AFTER INSERT
+AS
+BEGIN
+	INSERT INTO LOGAKTIVITAS (AKTIVITAS, DATA, WAKTU)
+    SELECT  'INSERT DATA JADWAL', 
+            'JadwalID ' + CAST(i.JadwalID AS VARCHAR) + ', Nama Tanaman: ' + T.NamaTanaman + ', Nama Lahan: ' + L.NamaLahan, 
+            GETDATE()
+    FROM inserted i
+    INNER JOIN DataTanaman T ON i.TanamanID = T.TanamanID
+    INNER JOIN DataLahan L ON i.LahanID = L.LahanID
+END;
+
+CREATE OR ALTER TRIGGER TRG_DeleteJadwal
+ON JadwalTanam
+AFTER DELETE
+AS
+BEGIN
+    INSERT INTO LOGAKTIVITAS (AKTIVITAS, DATA, WAKTU)
+    SELECT  'HAPUS DATA JADWAL', 
+            'JadwalID ' + CAST(d.JadwalID AS VARCHAR) + ', Nama Tanaman: ' + T.NamaTanaman + ', NamaLahan: ' + L.NamaLahan, 
+             GETDATE()
+    FROM deleted d
+    INNER JOIN DataTanaman T ON d.TanamanID = T.TanamanID
+    INNER JOIN DataLahan L ON d.LahanID = L.LahanID
+END;
+
+CREATE OR ALTER TRIGGER TRG_UpdateJadwalTanam
+ON JadwalTanam
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (SELECT 1 FROM inserted)
+    BEGIN
+        INSERT INTO LOGAKTIVITAS (AKTIVITAS, DATA, WAKTU)
+        SELECT 
+            'UPDATE DATA JADWAL',
+            
+            'JadwalID ' + CAST(i.JadwalID AS VARCHAR) + ' diubah: ' +
+            
+            -- Cek apakah TanamanID berubah
+            CASE 
+                WHEN i.TanamanID <> d.TanamanID 
+                THEN '[Tanaman: ' + T_Lama.NamaTanaman + ' -> ' + T_Baru.NamaTanaman + '] ' 
+                ELSE '' 
+            END +
+            
+            -- Cek apakah LahanID berubah
+            CASE 
+                WHEN i.LahanID <> d.LahanID 
+                THEN '[Lahan: ' + L_Lama.NamaLahan + ' -> ' + L_Baru.NamaLahan + '] ' 
+                ELSE '' 
+            END +
+
+            CASE 
+                WHEN i.TanggalTanam <> d.TanggalTanam 
+                THEN '[Tanggal: ' + CONVERT(VARCHAR, d.TanggalTanam, 103) + ' -> ' + CONVERT(VARCHAR, i.TanggalTanam, 103) + '] ' 
+                ELSE '' 
+            END,
+            
+            GETDATE()
+            
+        FROM inserted i
+        INNER JOIN deleted d ON i.JadwalID = d.JadwalID
+        
+        -- 1. JOIN untuk mendapatkan NAMA BARU (dari data inserted)
+        INNER JOIN DataTanaman T_Baru ON i.TanamanID = T_Baru.TanamanID
+        INNER JOIN DataLahan L_Baru ON i.LahanID = L_Baru.LahanID
+        
+        -- 2. JOIN untuk mendapatkan NAMA LAMA (dari data deleted)
+        INNER JOIN DataTanaman T_Lama ON d.TanamanID = T_Lama.TanamanID
+        INNER JOIN DataLahan L_Lama ON d.LahanID = L_Lama.LahanID
+        
+    END
+END;
+
+SELECT * FROM LOGAKTIVITAS
+SELECT * FROM DataTanaman
+
